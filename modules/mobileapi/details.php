@@ -67,7 +67,6 @@ class Module_MobileAPI extends Module {
             'active' => array(
                 'type' => 'INT',
                 'constraint' => '11',
-                'auto_increment' => TRUE,
                 'default' => 1,
             ),
         );
@@ -85,7 +84,6 @@ class Module_MobileAPI extends Module {
             'active' => array(
                 'type' => 'INT',
                 'constraint' => '11',
-                'auto_increment' => TRUE,
                 'default' => 1,
             ),
         );
@@ -108,6 +106,25 @@ class Module_MobileAPI extends Module {
             ),
         );
 
+        $user_tokens = array(
+            'id' => array(
+                'type' => 'INT',
+                'constraint' => '11',
+                'auto_increment' => TRUE
+            ),
+            'user_id' => array(
+                'type' => 'INT',
+                'constraint' => '11',
+            ),
+            'token' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+            ),
+            'creation_time' => array(
+                'type' => 'TIMESTAMP',
+            ),
+        );
+
 		// API Users
         $this->dbforge->add_field($users);
         $this->dbforge->add_key('id', TRUE);
@@ -117,6 +134,16 @@ class Module_MobileAPI extends Module {
         $this->dbforge->add_field($keys);
 		$this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('api_keys');
+
+        // API User Keys
+        $this->dbforge->add_field($user_keys);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('api_user_keys');
+
+        // API User Keys
+        $this->dbforge->add_field($user_tokens);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('api_user_tokens');
 
         // Sample settings
         /*
