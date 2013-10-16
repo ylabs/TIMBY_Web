@@ -2,7 +2,7 @@
 /**
  * API Controller
  */
-class API extends API_Controller
+class API extends REST_Controller
 {
 	public function __construct()
 	{
@@ -10,10 +10,10 @@ class API extends API_Controller
 	}
 
 	/**
-	 * All items
+	 * Login
 	 */
-	public function index($offset = 0)
+	public function login_post()
 	{
-        // API landing
+        // Login
 	}
 }

@@ -10,4 +10,28 @@ class users_model extends BF_Model
     {
         parent::__construct();
     }
+
+    public function create_user($user_name, $password)
+    {
+        $user = $this->user_exists($user_name);
+
+        if(!$user)
+        {
+            return parent::insert(array('name' => $user_name, 'password' => md5($password)));
+        }
+
+        return false;
+    }
+
+    private function user_exists($user_name)
+    {
+        $user = $user = $this->find_by(array('name' => $user_name));
+        return $user;
+    }
+
+    public function login_user($user_name, $password)
+    {
+        $user = $this->find_by(array('name' => $user_name, 'password' => md5($password)));
+        return $user;
+    }
 }

@@ -15,7 +15,7 @@ class Module_MobileAPI extends Module {
 			),
 			'frontend' => TRUE,
 			'backend' => TRUE,
-			'menu' => 'TIMBY', // You can also place modules in their top level menu. For example try: 'menu' => 'Sample',
+			'menu' => 'content', // You can also place modules in their top level menu. For example try: 'menu' => 'Sample',
 			'sections' => array (
 				'users' => array (
 					'name' 	=> 'mobileapi:users', // These are translated from your language file
@@ -50,7 +50,8 @@ class Module_MobileAPI extends Module {
 
         $this->db->delete('settings', array('module' => 'mobileapi'));
 
-		$users = array (
+		// Users
+        $users = array (
             'id' => array(
                 'type' => 'INT',
                 'constraint' => '11',
@@ -71,6 +72,7 @@ class Module_MobileAPI extends Module {
             ),
         );
 
+        // Keys
         $keys = array (
             'id' => array(
                 'type' => 'INT',
@@ -81,6 +83,11 @@ class Module_MobileAPI extends Module {
                 'type' => 'VARCHAR',
                 'constraint' => '100'
             ),
+            'user_id' => array(
+                'type' => 'INT',
+                'constraint' => '11',
+                'default' => 0,
+            ),
             'active' => array(
                 'type' => 'INT',
                 'constraint' => '11',
@@ -88,24 +95,7 @@ class Module_MobileAPI extends Module {
             ),
         );
 
-        $user_keys = array(
-            'id' => array(
-                'type' => 'INT',
-                'constraint' => '11',
-                'auto_increment' => TRUE
-            ),
-            'user_id' => array(
-                'type' => 'INT',
-                'constraint' => '11',
-                'auto_increment' => TRUE
-            ),
-            'key_id' => array(
-                'type' => 'INT',
-                'constraint' => '11',
-                'auto_increment' => TRUE
-            ),
-        );
-
+        // Tokens
         $user_tokens = array(
             'id' => array(
                 'type' => 'INT',
@@ -116,6 +106,10 @@ class Module_MobileAPI extends Module {
                 'type' => 'INT',
                 'constraint' => '11',
             ),
+            'ip_address' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+            ),
             'token' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '50',
@@ -124,6 +118,16 @@ class Module_MobileAPI extends Module {
                 'type' => 'TIMESTAMP',
             ),
         );
+
+        // Check and remove if possible
+        if($this->db->table_exists('api_users'))
+            $this->dbforge->drop_table('api_users');
+
+        if($this->db->table_exists('api_keys'))
+            $this->dbforge->drop_table('api_keys');
+
+        if($this->db->table_exists('api_user_tokens'))
+            $this->dbforge->drop_table('api_user_tokens');
 
 		// API Users
         $this->dbforge->add_field($users);
@@ -135,44 +139,44 @@ class Module_MobileAPI extends Module {
 		$this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('api_keys');
 
-        // API User Keys
-        $this->dbforge->add_field($user_keys);
-        $this->dbforge->add_key('id', TRUE);
-        $this->dbforge->create_table('api_user_keys');
-
-        // API User Keys
+        // User tokens
         $this->dbforge->add_field($user_tokens);
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('api_user_tokens');
 
-        // Sample settings
-        /*
-        $sample_setting = array(
-            'slug' => 'sample_setting',
-            'title' => 'Sample Setting',
-            'description' => 'A Yes or No option for the Sample module',
+        // Mobile API settings
+        $token_validity_setting = array(
+            'slug' => 'mobileapi_token_validity_hours',
+            'title' => 'How many hours is a token valid for?',
+            'description' => 'Number of hours it is valid for',
             '`default`' => '1',
             '`value`' => '1',
-            'type' => 'select',
-            '`options`' => '1=Yes|0=No',
+            'type' => 'text',
+            '`options`' => '',
             'is_required' => 1,
             'is_gui' => 1,
-            'module' => 'sample'
+            'module' => 'mobileapi'
         );
 
-        $this->db->insert('settings', $sample_setting);
-        */
+        $this->db->insert('settings', $token_validity_setting);
 
         return true;
 	}
 
 	public function uninstall()
 	{
-		$this->dbforge->drop_table('api_users');
-        $this->dbforge->drop_table('api_keys');
+        // Tables
+        if($this->db->table_exists('api_users'))
+		    $this->dbforge->drop_table('api_users');
 
-        // Settings:
-        // $this->db->delete('settings', array('module' => 'sample'));
+        if($this->db->table_exists('api_keys'))
+            $this->dbforge->drop_table('api_keys');
+
+        if($this->db->table_exists('api_user_tokens'))
+            $this->dbforge->drop_table('api_user_tokens');
+
+        // Settings
+        $this->db->delete('settings', array('module' => 'mobileapi'));
 
         return true;
 	}
