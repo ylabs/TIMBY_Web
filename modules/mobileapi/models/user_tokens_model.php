@@ -18,12 +18,58 @@ class user_tokens_model extends BF_Model
         $user = $this->users_model->find($user_id);
         $hours = Settings::get('mobileapi_token_validity_hours');
 
+        $current_date = new DateTime();
+        $current_date->sub(new DateInterval("P{$hours}H"));
+
         if($user)
         {
+            $result = $this->where('creation_time >=', $current_date->format('Y-m-d H:m:s'))
+                ->where('ip_address', $ip_address)
+                ->find_all();
+
+            if($result)
+            {
+                return $result[0]->token;
+            }
+
+            return false;
         }
         else
         {
             return false;
         }
+    }
+
+    public function create_token($user_id, $ip_address)
+    {
+        $token = md5(time());
+        $token_len = strlen($token);
+        $token_half = ceil($token_len / 2);
+        $token = substr($token, $token_half, $token_half - 2);
+
+        $result = $this->insert(
+            array(
+                'user_id' => $user_id,
+                'ip_address' => $ip_address,
+                'token' => $token,
+            )
+        );
+
+        if($result)
+        {
+            return $token;
+        }
+
+        return false;
+    }
+
+    public function clear_old_tokens()
+    {
+        $hours = Settings::get('mobileapi_token_validity_hours');
+
+        $current_date = new DateTime();
+        $current_date->sub(new DateInterval("P{$hours}H"));
+
+        return $this->delete_where(array($this->where('creation_time <', $current_date->format('Y-m-d H:m:s'))));
     }
 }
