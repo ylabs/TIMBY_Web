@@ -23,7 +23,7 @@ class user_tokens_model extends BF_Model
 
         if($user)
         {
-            $result = $this->where('creation_time >=', $current_date->format('Y-m-d H:m:s'))
+            $result = $this->where('creation_time >=', $current_date->format('Y-m-d H:i:s'))
                 ->where('ip_address', $ip_address)
                 ->find_all();
 
@@ -70,6 +70,6 @@ class user_tokens_model extends BF_Model
         $current_date = new DateTime();
         $current_date->sub(new DateInterval("P{$hours}H"));
 
-        return $this->delete_where(array($this->where('creation_time <', $current_date->format('Y-m-d H:m:s'))));
+        return $this->delete_where(array($this->where('creation_time <', $current_date->format('Y-m-d H:i:s'))));
     }
 }
