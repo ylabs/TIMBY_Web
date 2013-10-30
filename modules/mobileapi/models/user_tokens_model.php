@@ -40,6 +40,11 @@ class user_tokens_model extends BF_Model
         }
     }
 
+    public function delete_tokens($user_id)
+    {
+        return $this->delete_where(array('user_id' => $user_id));
+    }
+
     public function create_token($user_id, $ip_address)
     {
         $token = md5(time());

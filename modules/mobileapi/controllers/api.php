@@ -56,12 +56,12 @@ class API extends REST_Controller
 
         if($login_user_status)
         {
-            $token = $this->user_tokens_model->create_token($login_user_status->id,
+            $token = $this->user_tokens_model->create_token($login_user_status[0]->id,
                 $this->mobileapi_utils->get_client_ip());
 
             if($token !== false)
             {
-                $this->response($this->success(array("user_id" => $login_user_status->id, "token" => $token)));
+                $this->response($this->success(array("user_id" => $login_user_status[0]->id, "token" => $token)));
                 exit;
             }
             else
@@ -76,6 +76,32 @@ class API extends REST_Controller
             exit;
         }
 	}
+
+    public function logout_post()
+    {
+        $user_name = $this->input->post('user_name');
+        $password = $this->input->post('password');
+
+        if($user_name == false || $password == false)
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+
+        $login_user_status = $this->users_model->login_status($user_name, $password);
+
+        if($login_user_status)
+        {
+            $this->user_tokens_model->delete_tokens($login_user_status[0]->id);
+            $this->response($this->success("Logout success"));
+            exit;
+        }
+        else
+        {
+            $this->response($this->error(self::msg_login_invalid_id, self::msg_login_invalid_text));
+            exit;
+        }
+    }
 
     /**
      * Check to see validity of a token
