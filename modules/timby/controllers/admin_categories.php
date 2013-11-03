@@ -1,8 +1,8 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * The Catgory management admin landing page
+ * The Category management admin landing page
  */
-class Admin extends Admin_Controller
+class Admin_Categories extends Admin_Controller
 {
     protected $section = 'categories';
 
@@ -10,7 +10,11 @@ class Admin extends Admin_Controller
     {
         parent::__construct();
 
+        // Models
         $this->load->model('categories_m');
+
+        // Language
+        $this->lang->load('timby');
     }
 
     /**
@@ -22,9 +26,11 @@ class Admin extends Admin_Controller
         $items = $this->categories_m->find_all();
 
         // Build the view with sample/views/admin/items.php
+
         $this->template
             ->title($this->module_details['name'])
             ->set('items', $items)
             ->build('admin/categories/index');
+
     }
 }

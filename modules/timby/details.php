@@ -62,12 +62,6 @@ class Module_Timby extends Module {
             'user_id' => array(
                 'type' => 'INT',
             ),
-            'created_on' => array(
-                'type' => 'datetime',
-            ),
-            'modified_on' => array(
-                'type' => 'datetime',
-            ),
             'lat' => array(
                 'type' => 'float',
                 'default' => 0,
@@ -75,7 +69,13 @@ class Module_Timby extends Module {
             'long' => array(
                 'type' => 'float',
                 'default' => 0,
-            )
+            ),
+            'created_on' => array(
+                'type' => 'datetime',
+            ),
+            'modified_on' => array(
+                'type' => 'datetime',
+            ),
         );
 
         $report_sequence = array(
@@ -95,7 +95,13 @@ class Module_Timby extends Module {
             ),
             'sequence' => array(
                 'type' => 'INT',
-            )
+            ),
+            'created_on' => array(
+                'type' => 'datetime',
+            ),
+            'modified_on' => array(
+                'type' => 'datetime',
+            ),
         );
 
         $report_narratives = array(
@@ -110,7 +116,13 @@ class Module_Timby extends Module {
             ),
             'narrative' => array(
                 'type' => 'TEXT',
-            )
+            ),
+            'created_on' => array(
+                'type' => 'datetime',
+            ),
+            'modified_on' => array(
+                'type' => 'datetime',
+            ),
         );
 
         $report_images = array(
@@ -129,7 +141,13 @@ class Module_Timby extends Module {
             ),
             'image' => array(
                 'type' => 'TEXT',
-            )
+            ),
+            'created_on' => array(
+                'type' => 'datetime',
+            ),
+            'modified_on' => array(
+                'type' => 'datetime',
+            ),
         );
 
         $report_videos = array(
@@ -148,7 +166,13 @@ class Module_Timby extends Module {
             ),
             'video' => array(
                 'type' => 'TEXT',
-            )
+            ),
+            'created_on' => array(
+                'type' => 'datetime',
+            ),
+            'modified_on' => array(
+                'type' => 'datetime',
+            ),
         );
 
         $report_categories = array(

@@ -10,8 +10,12 @@ class Admin extends Admin_Controller
 	{
 		parent::__construct();
 
+        // Models
         $this->load->model('reports_m');
         $this->load->model('categories_m');
+
+        // Language
+        $this->lang->load('timby');
 	}
 
 	/**
