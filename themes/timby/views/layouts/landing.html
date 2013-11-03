@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!--Edit the title of the page-->
+        <title>Welcome to TIMBY</title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+        <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
+        <![endif]-->
+        <!--Switch between the different themes changing the stylesheet below - light-theme.css |dark-theme.css -->
+
+        {{ if theme:options:theme == 'dark' }}
+            {{ theme:css file="dark-theme.css" }}
+        {{ else }}
+            {{ theme:css file="light-theme.css" }}
+        {{ endif }}
+
+        {{ theme:css file="makeitresponsive.css" }}
+    </head>
+    <body>
+
+    <div class="map" id="map"></div>
+
+    <div class="sidepanel">
+        <div class="wrapper">
+            <!-- If we need a context sub header-->
+
+            <!--
+            <div class="context subheader">
+                <p>Map created by <a href="#">{Link to your website}</a></p>
+            </div>
+            -->
+            <h1>Dashboard</h1>
+            <p>Welcome to the TIMBY Dashboard</p>
+
+            <!--Copy and paste the div below for creating content blocks-->
+            <h3>Description</h3>
+            <p>The map on the left id described here.</p>
+
+            <h3>Sources</h3>
+            <p>Our sources data</p>
+
+            <div class="context footer">
+                <p>&copy; 2013 <a href="http://timby.org/">TIMBY</a></p></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false&v=3.8"></script>
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+
+    <!-- Dashboard vis -->
+
+    <script type="text/javascript">
+        cartodb.createVis('map', 'http://timby.cartodb.com/api/v2/viz/db2f6d30-443d-11e3-bbef-5fc57e5d5ce4/viz.json');
+    </script>
+
+    </body>
+</html>

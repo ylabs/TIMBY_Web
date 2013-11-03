@@ -25,6 +25,11 @@ class API extends REST_Controller
         $this->load->model('user_tokens_model');
 
         $this->load->library('mobileapi_utils');
+
+        if(strtolower(substr(current_url(), 4, 1)) != 's')
+        {
+            redirect(str_replace('http:', 'https:', current_url()));
+        }
 	}
 
     private function error($error_code, $message)
