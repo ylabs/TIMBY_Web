@@ -20,10 +20,12 @@ class API extends REST_Controller
 	{
 		parent::__construct();
 
+        // Models
         $this->load->model('users_model');
         $this->load->model('keys_model');
         $this->load->model('user_tokens_model');
 
+        // Libraries
         $this->load->library('mobileapi_utils');
 
         if(strtolower(substr(current_url(), 4, 1)) != 's')
@@ -82,6 +84,10 @@ class API extends REST_Controller
         }
 	}
 
+    /**
+     * Logout
+     */
+
     public function logout_post()
     {
         $user_name = $this->input->post('user_name');
@@ -124,6 +130,258 @@ class API extends REST_Controller
             if($system_token !== false)
             {
                 $this->response($this->success($system_token));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
+     * Create a new report
+     */
+
+    public function createreport_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+
+        $title = $this->input->post('title');
+        $category = $this->input->post('category');
+        $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
+        $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
+
+        if($token !== false && $user_id !== false && $title !== false && $category != false)
+        {
+            $post_vars = $this->input->post();
+
+            if(!isset($post_vars['lat']))
+            {
+                $post_vars['lat'] = $lat;
+            }
+
+            if(!isset($post_vars['long']))
+            {
+                $post_vars['long'] = $long;
+            }
+
+            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+
+            if($system_token !== false)
+            {
+                $this->response($this->success(Events::trigger('create_report', $post_vars, 'array')));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
+     * Update a current report
+     */
+
+    public function updatereport_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+
+        $report_id = $this->input->post('report_id');
+        $title = $this->input->post('title');
+        $category = $this->input->post('category');
+        $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
+        $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
+
+        if($token !== false && $user_id !== false && $title !== false && $category != false &&
+            $report_id != false)
+        {
+            $post_vars = $this->input->post();
+
+            if(!isset($post_vars['lat']))
+            {
+                $post_vars['lat'] = $lat;
+            }
+
+            if(!isset($post_vars['long']))
+            {
+                $post_vars['long'] = $long;
+            }
+
+            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+
+            if($system_token !== false)
+            {
+                $this->response($this->success(Events::trigger('update_report', $post_vars, 'array')));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
+     * Delete a report
+     */
+
+    public function deletereport_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+
+        $report_id = $this->input->post('report_id');
+
+        if($token !== false && $user_id !== false && $report_id != false)
+        {
+            $post_vars = $this->input->post();
+
+            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+
+            if($system_token !== false)
+            {
+                $this->response($this->success(Events::trigger('delete_report', $post_vars, 'array')));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
+     * Insert a new object
+     */
+
+    public function insertobject_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+
+        $sequence_number = $this->input->post("sequence");
+        $object_type = $this->input->post("object_type");
+        $report_id = $this->input->post("report_id");
+        $object_id = $this->input->post("object_id");
+        $narrative = $this->input->post("narrative");
+
+        if($token !== false && $user_id !== false && $report_id !== false && $sequence_number !== false &&
+            $object_type !== false && $object_id !== false && $narrative !== false)
+        {
+            $post_vars = $this->input->post();
+            $post_vars['upload_path'] = $this->upload_path;
+
+            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+
+            if($system_token !== false)
+            {
+                $this->response($this->success(Events::trigger('insert_object', $post_vars, 'array')));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
+     * Update an object
+     */
+
+    public function updateobject_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+
+        $sequence_number = $this->input->post("sequence");
+        $object_type = $this->input->post("object_type");
+        $report_id = $this->input->post("report_id");
+        $object_id = $this->input->post("object_id");
+        $narrative = $this->input->post("narrative");
+
+        if($token !== false && $user_id !== false && $report_id !== false && $sequence_number !== false &&
+            $object_type !== false && $object_id !== false && $narrative !== false)
+        {
+            $post_vars = $this->input->post();
+            $post_vars['upload_path'] = $this->upload_path;
+
+            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+
+            if($system_token !== false)
+            {
+                $this->response($this->success(Events::trigger('update_object', $post_vars, 'array')));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
+     * Delete an object
+     */
+
+    public function deleteobject_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+
+        $object_type = $this->input->post('object_type');
+        $object_id = $this->input->post('object_id');
+
+        if($token !== false && $user_id !== false && $object_type != false && $object_id != false)
+        {
+            $post_vars = $this->input->post();
+            $post_vars['upload_path'] = $this->upload_path;
+
+            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+
+            if($system_token !== false)
+            {
+                $this->response($this->success(Events::trigger('delete_object', $post_vars, 'array')));
                 exit;
             }
             else

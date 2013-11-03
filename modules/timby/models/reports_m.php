@@ -16,7 +16,46 @@ class Reports_m extends BF_Model {
         $this->load->model('report_narratives_m');
         $this->load->model('report_videos_m');
         $this->load->model('report_images_m');
+
+        // Libraries
+        $this->load->library("utilities");
 	}
+
+    public function insert($data = NULL)
+    {
+        if(isset($data["category"]))
+        {
+            $data["slug"] = $this->utilities->get_slug($data["category"]);
+        }
+
+        return parent::insert($data);
+    }
+
+    public function update($where = NULL, $data = NULL)
+    {
+        if(isset($data["category"]))
+        {
+            $data["slug"] = $this->utilities->get_slug($data["category"]);
+        }
+
+        return parent::update($where, $data);
+    }
+
+    public function delete($id = NULL)
+    {
+        $result = parent::delete($id);
+
+        if($result)
+        {
+            $this->sequence()->delete_where(array("report_id" => $id));
+            $this->sequence()->delete_where(array("report_id" => $id));
+            $this->narratives()->delete_where(array("report_id" => $id));
+            $this->images()->delete_where(array("report_id" => $id));
+            $this->videos()->delete_where(array("report_id" => $id));
+        }
+
+        return $result;
+    }
 
     public function &sequence()
     {

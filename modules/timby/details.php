@@ -8,7 +8,7 @@ class Module_Timby extends Module {
 	{
 		return array(
 			'name' => array(
-				'en' => 'TIMBY Module'
+				'en' => 'TIMBY'
 			),
 			'description' => array(
 				'en' => 'This is the main TIMBY module.'
@@ -68,6 +68,14 @@ class Module_Timby extends Module {
             ),
             'long' => array(
                 'type' => 'float',
+                'default' => 0,
+            ),
+            'approved' => array(
+                'type' => 'INT',
+                'default' => 0,
+            ),
+            'carto_db_id' => array(
+                'type' => 'BIGINT',
                 'default' => 0,
             ),
             'created_on' => array(
@@ -221,6 +229,54 @@ class Module_Timby extends Module {
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('report_categories');
 
+        // Module settings
+        $youtube_api_key = array(
+            'slug' => 'youtube_api_key',
+            'title' => 'YouTube API Key',
+            'description' => 'API Key used to manage videos on YouTube',
+            '`default`' => 'YAPIKey',
+            '`value`' => 'YAPIKey',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $youtube_api_key);
+
+        $cartodb_user_name = array(
+            'slug' => 'cartodb_user_name',
+            'title' => 'CartoDB User Name',
+            'description' => 'CartoDB User name',
+            '`default`' => 'username',
+            '`value`' => 'username',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $cartodb_user_name);
+
+        $cartodb_api_key = array(
+            'slug' => 'cartodb_api_key',
+            'title' => 'CartoDB API Key',
+            'description' => 'CartoDB API Key',
+            '`default`' => 'CAPIKey',
+            '`value`' => 'CAPIKey',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $cartodb_api_key);
+
+        // Return status
+
 		return true;
 	}
 
@@ -236,6 +292,8 @@ class Module_Timby extends Module {
 
         // Remove settings
         $this->db->delete('settings', array('module' => 'timby'));
+
+        return true;
 	}
 
 

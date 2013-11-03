@@ -4,25 +4,64 @@
  */
 class Events_Timby {
     
-    protected $ci;
-    
     public function __construct()
     {
-        $this->ci =& get_instance();
-        
-        //register the public_controller event
-        Events::register('public_controller', array($this, 'run'));
-		
-		//register a second event that can be called any time.
-		// To execute the "run" method below you would use: Events::trigger('sample_event');
-		// in any php file within PyroCMS, even another module.
-		Events::register('sample_event', array($this, 'run'));
+        ci()->load->library('timby/api_handlers');
+
+        // Report events
+        Events::register('create_report', array($this, 'create_report'));
+        Events::register('update_report', array($this, 'update_report'));
+        Events::register('delete_report', array($this, 'delete_report'));
+
+        // Report data events
+        Events::register('insert_object', array($this, 'insert_object'));
+        Events::register('update_object', array($this, 'update_object'));
+        Events::register('delete_object', array($this, 'delete_object'));
+
+        // Media functions - useful for things like decryption
+        Events::register('media_uploaded', array($this, 'media_uploaded'));
     }
     
-    public function run()
+    public function create_report($post_vars)
     {
-        // Run logic?
+        // Manage this event
+        return ci()->api_handlers->create_report($post_vars);
     }
-    
+
+    public function update_report($post_vars)
+    {
+        // Manage this event
+        return ci()->api_handlers->update_report($post_vars);
+    }
+
+    public function delete_report($post_vars)
+    {
+        // Manage this event
+        return ci()->api_handlers->delete_report($post_vars);
+    }
+
+    public function insert_object($post_vars)
+    {
+        // Manage this event
+        return ci()->api_handlers->delete_report($post_vars['upload_path'], $post_vars);
+    }
+
+    public function update_object($post_vars)
+    {
+        // Manage this event
+        return ci()->api_handlers->delete_report($post_vars['upload_path'], $post_vars);
+    }
+
+    public function delete_object($post_vars)
+    {
+        // Manage this event
+        return ci()->api_handlers->delete_report($post_vars['upload_path'], $post_vars);
+    }
+
+    public function media_uploaded($upload_data)
+    {
+        // Decrypt media
+        $file_name = $upload_data["file_name"];
+    }
 }
 /* End of file events.php */
