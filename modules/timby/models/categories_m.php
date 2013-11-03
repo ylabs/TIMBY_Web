@@ -12,14 +12,14 @@ class Categories_m extends BF_Model {
         parent::__construct();
 
         // Libraries
-        $this->load->library("utilities");
+        $this->load->library("timby/timby_utilities");
     }
 
     public function insert($data = NULL)
     {
         if(isset($data["category"]))
         {
-            $data["slug"] = $this->utilities->get_slug($data["category"]);
+            $data["slug"] = $this->timby_utilities->get_slug($data["category"]);
         }
 
         return parent::insert($data);
@@ -29,7 +29,7 @@ class Categories_m extends BF_Model {
     {
         if(isset($data["category"]))
         {
-            $data["slug"] = $this->utilities->get_slug($data["category"]);
+            $data["slug"] = $this->timby_utilities->get_slug($data["category"]);
         }
 
         return parent::update($where, $data);

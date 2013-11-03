@@ -12,20 +12,20 @@ class Reports_m extends BF_Model {
 		parent::__construct();
 
         // Loading related models
-        $this->load->model('report_sequence_m');
-        $this->load->model('report_narratives_m');
-        $this->load->model('report_videos_m');
-        $this->load->model('report_images_m');
+        $this->load->model('timby/report_sequence_m');
+        $this->load->model('timby/report_narratives_m');
+        $this->load->model('timby/report_videos_m');
+        $this->load->model('timby/report_images_m');
 
         // Libraries
-        $this->load->library("utilities");
+        $this->load->library("timby/timby_utilities");
 	}
 
     public function insert($data = NULL)
     {
         if(isset($data["category"]))
         {
-            $data["slug"] = $this->utilities->get_slug($data["category"]);
+            $data["slug"] = $this->timby_utilities->get_slug($data["category"]);
         }
 
         return parent::insert($data);
@@ -35,7 +35,7 @@ class Reports_m extends BF_Model {
     {
         if(isset($data["category"]))
         {
-            $data["slug"] = $this->utilities->get_slug($data["category"]);
+            $data["slug"] = $this->timby_utilities->get_slug($data["category"]);
         }
 
         return parent::update($where, $data);

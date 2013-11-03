@@ -28,9 +28,12 @@ class API extends REST_Controller
         // Libraries
         $this->load->library('mobileapi_utils');
 
-        if(strtolower(substr(current_url(), 4, 1)) != 's')
+        if(ENVIRONMENT == PYRO_PRODUCTION)
         {
-            redirect(str_replace('http:', 'https:', current_url()));
+            if(strtolower(substr(current_url(), 4, 1)) != 's')
+            {
+                redirect(str_replace('http:', 'https:', current_url()));
+            }
         }
 	}
 
