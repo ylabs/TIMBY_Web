@@ -31,7 +31,7 @@ class Events_Timby {
     public function update_report($post_vars)
     {
         // Manage this event
-        return ci()->api_handlers->update_report($post_vars);
+        return ci()->api_handlers->update_report($post_vars['report_id'], $post_vars);
     }
 
     public function delete_report($post_vars)

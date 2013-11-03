@@ -14,6 +14,8 @@ class API_Handlers
     public function create_report($post_data)
     {
         unset($post_data["approved"]);
+        unset($post_data["token"]);
+
         $status = ci()->reports_m->insert($post_data);
 
         if($status != false)
@@ -27,6 +29,9 @@ class API_Handlers
     public function update_report($report_id, $post_data)
     {
         unset($post_data["approved"]);
+        unset($post_data["token"]);
+        unset($post_data["report_id"]);
+
         $status = ci()->reports_m->update($report_id, $post_data);
 
         if($status != false)
@@ -39,6 +44,8 @@ class API_Handlers
 
     public function delete_report($post_data)
     {
+        unset($post_data["token"]);
+
         $status = ci()->reports_m->delete($post_data["report_id"]);
 
         if($status)
@@ -53,6 +60,8 @@ class API_Handlers
     {
         // We may upload heavy objects
         set_time_limit(0);
+
+        unset($post_data["token"]);
 
         // Upload configuration
         $config = array();
@@ -152,6 +161,8 @@ class API_Handlers
     {
         // We may upload heavy objects
         set_time_limit(0);
+
+        unset($post_data["token"]);
 
         // Upload configuration
         $config = array();
@@ -271,6 +282,8 @@ class API_Handlers
 
     public function delete_report_object($upload_path, $post_data)
     {
+        unset($post_data["token"]);
+
         $object_type = $post_data["object_type"];
         $table_to_use = "";
         $object_id = $post_data["object_id"];

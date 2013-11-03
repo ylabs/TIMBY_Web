@@ -23,13 +23,19 @@ class Admin extends Admin_Controller
 	 */
 	public function index()
 	{
+        $total_rows = $this->reports_m->count_all();
+        $pagination = create_pagination('admin/timby/index', $total_rows);
+
 		// here we use MY_Model's get_all() method to fetch everything
-		$items = $this->reports_m->find_all();
+		$items = $this->reports_m
+            ->limit($pagination['limit'], $pagination['offset'])
+            ->find_all();
 
 		// Build the view with sample/views/admin/items.php
 		$this->template
 			->title($this->module_details['name'])
 			->set('items', $items)
+            ->set('pagination', $pagination)
 			->build('admin/reports/index');
 	}
 

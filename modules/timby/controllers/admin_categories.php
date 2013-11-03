@@ -37,6 +37,8 @@ class Admin_Categories extends Admin_Controller
     {
         $post_vars = $this->input->post();
 
+        unset($post_vars["btnAction"]);
+
         if($post_vars)
         {
             $this->categories_m->insert($post_vars);
@@ -58,6 +60,8 @@ class Admin_Categories extends Admin_Controller
         }
 
         $post_vars = $this->input->post();
+
+        unset($post_vars["btnAction"]);
 
         if($post_vars)
         {

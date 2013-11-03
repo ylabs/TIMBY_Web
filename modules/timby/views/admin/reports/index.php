@@ -21,10 +21,10 @@
                                 <?php echo $item->title; ?>
                             </td>
                             <td>
-                                <?php echo date("d/m/Y H:i:s", strtotime($item->slug)); ?>
+                                <?php echo date("d/m/Y H:i:s", strtotime($item->report_date)); ?>
                             </td>
                             <td>
-                                <a href="<?php echo site_url('admin/timby/view/'.$item->id) ?>" title="<?php echo lang('global:edit')?>" class="button"><?php echo lang('global:edit')?></a>
+                                <a href="<?php echo site_url('admin/timby/view/'.$item->id) ?>" title="<?php echo lang('global:view')?>" class="button"><?php echo lang('global:view')?></a>
 
                                 <?php if($item->approved == 0) : ?>
                                     <a href="<?php echo site_url('admin/timby/approve/'.$item->id) ?>" title="<?php echo lang('timby:approve')?>" class="button"><?php echo lang('timby:approve')?></a>
@@ -38,6 +38,9 @@
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+
+                <?php $this->load->view('admin/partials/pagination'); ?>
+
             <?php else: ?>
                 <div class="no_data"><?php echo lang('timby:no_reports_uploaded') ?></div>
             <?php endif; ?>

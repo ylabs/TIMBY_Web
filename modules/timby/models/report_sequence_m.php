@@ -6,6 +6,7 @@ class Report_sequence_m extends BF_Model {
     protected $table_name = "report_sequence";
     protected $set_created	= TRUE;
     protected $set_modified = TRUE;
+    protected $date_format = 'datetime';
 
     public function __construct()
     {
@@ -17,9 +18,12 @@ class Report_sequence_m extends BF_Model {
         $all_after = $this->where(array("sequence >" => $data["sequence"]))
             ->find_all();
 
-        foreach($all_after as $after_item)
+        if($all_after != false)
         {
-            parent::update($after_item->id, array("sequence" => ($all_after->sequence + 1)));
+            foreach($all_after as $after_item)
+            {
+                parent::update($after_item->id, array("sequence" => ($all_after->sequence + 1)));
+            }
         }
 
         return parent::insert($data);
@@ -30,9 +34,12 @@ class Report_sequence_m extends BF_Model {
         $all_after = $this->where(array("sequence >" => $data["sequence"]))
             ->find_all();
 
-        foreach($all_after as $after_item)
+        if($all_after != false)
         {
-            parent::update($after_item->id, array("sequence" => ($all_after->sequence + 1)));
+            foreach($all_after as $after_item)
+            {
+                parent::update($after_item->id, array("sequence" => ($all_after->sequence + 1)));
+            }
         }
 
         return parent::update($where, $data);

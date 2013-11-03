@@ -6,6 +6,7 @@ class Report_videos_m extends BF_Model {
     protected $table_name = "report_videos";
     protected $set_created	= TRUE;
     protected $set_modified = TRUE;
+    protected $date_format = 'datetime';
 
     public function __construct()
     {

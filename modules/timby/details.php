@@ -78,11 +78,15 @@ class Module_Timby extends Module {
                 'type' => 'BIGINT',
                 'default' => 0,
             ),
+            'report_date' => array(
+                'type' => 'datetime',
+            ),
             'created_on' => array(
                 'type' => 'datetime',
             ),
             'modified_on' => array(
                 'type' => 'datetime',
+                'null' => true,
             ),
         );
 
@@ -109,6 +113,7 @@ class Module_Timby extends Module {
             ),
             'modified_on' => array(
                 'type' => 'datetime',
+                'null' => true,
             ),
         );
 
@@ -130,6 +135,7 @@ class Module_Timby extends Module {
             ),
             'modified_on' => array(
                 'type' => 'datetime',
+                'null' => true,
             ),
         );
 
@@ -155,6 +161,7 @@ class Module_Timby extends Module {
             ),
             'modified_on' => array(
                 'type' => 'datetime',
+                'null' => true,
             ),
         );
 
@@ -180,6 +187,7 @@ class Module_Timby extends Module {
             ),
             'modified_on' => array(
                 'type' => 'datetime',
+                'null' => true,
             ),
         );
 
@@ -274,6 +282,21 @@ class Module_Timby extends Module {
         );
 
         $this->db->insert('settings', $cartodb_api_key);
+
+        $decryption_key = array(
+            'slug' => 'timby_decription_key',
+            'title' => 'Decryption Key',
+            'description' => 'Decryption Key',
+            '`default`' => 'KEY',
+            '`value`' => 'KEY',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $decryption_key);
 
         // Return status
 

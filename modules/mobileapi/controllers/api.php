@@ -66,12 +66,21 @@ class API extends REST_Controller
 
         if($login_user_status)
         {
-            $token = $this->user_tokens_model->create_token($login_user_status[0]->id,
-                $this->mobileapi_utils->get_client_ip());
+            $token = null;
 
-            if($token !== false)
+            if(is_array($login_user_status))
+                $token = $this->user_tokens_model->create_token($login_user_status[0]->id,
+                    $this->mobileapi_utils->get_client_ip());
+            else
+                $token = $this->user_tokens_model->create_token($login_user_status->id,
+                    $this->mobileapi_utils->get_client_ip());
+
+            if($token != false)
             {
-                $this->response($this->success(array("user_id" => $login_user_status[0]->id, "token" => $token)));
+                if(is_array($login_user_status))
+                    $this->response($this->success(array("user_id" => $login_user_status[0]->id, "token" => $token)));
+                else
+                    $this->response($this->success(array("user_id" => $login_user_status->id, "token" => $token)));
                 exit;
             }
             else
@@ -126,11 +135,11 @@ class API extends REST_Controller
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
 
-        if($token !== false && $user_id !== false)
+        if($token != false && $user_id != false)
         {
-            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
-            if($system_token !== false)
+            if($system_token != false)
             {
                 $this->response($this->success($system_token));
                 exit;
@@ -159,10 +168,11 @@ class API extends REST_Controller
 
         $title = $this->input->post('title');
         $category = $this->input->post('category');
+        $report_date = $this->input->post('report_date');
         $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
         $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
 
-        if($token !== false && $user_id !== false && $title !== false && $category != false)
+        if($token != false && $user_id != false && $title != false && $category != false && $report_date != false)
         {
             $post_vars = $this->input->post();
 
@@ -176,9 +186,9 @@ class API extends REST_Controller
                 $post_vars['long'] = $long;
             }
 
-            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
-            if($system_token !== false)
+            if($system_token == $token)
             {
                 $this->response($this->success(Events::trigger('create_report', $post_vars, 'array')));
                 exit;
@@ -208,11 +218,12 @@ class API extends REST_Controller
         $report_id = $this->input->post('report_id');
         $title = $this->input->post('title');
         $category = $this->input->post('category');
+        $report_date = $this->input->post('report_date');
         $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
         $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
 
-        if($token !== false && $user_id !== false && $title !== false && $category != false &&
-            $report_id != false)
+        if($token != false && $user_id != false && $title != false && $category != false &&
+            $report_id != false && $report_date != false)
         {
             $post_vars = $this->input->post();
 
@@ -226,9 +237,9 @@ class API extends REST_Controller
                 $post_vars['long'] = $long;
             }
 
-            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
-            if($system_token !== false)
+            if($system_token == $token)
             {
                 $this->response($this->success(Events::trigger('update_report', $post_vars, 'array')));
                 exit;
@@ -257,13 +268,13 @@ class API extends REST_Controller
 
         $report_id = $this->input->post('report_id');
 
-        if($token !== false && $user_id !== false && $report_id != false)
+        if($token != false && $user_id != false && $report_id != false)
         {
             $post_vars = $this->input->post();
 
-            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
-            if($system_token !== false)
+            if($system_token == $token)
             {
                 $this->response($this->success(Events::trigger('delete_report', $post_vars, 'array')));
                 exit;
@@ -295,16 +306,17 @@ class API extends REST_Controller
         $report_id = $this->input->post("report_id");
         $object_id = $this->input->post("object_id");
         $narrative = $this->input->post("narrative");
+        $report_date = $this->input->post('report_date');
 
-        if($token !== false && $user_id !== false && $report_id !== false && $sequence_number !== false &&
-            $object_type !== false && $object_id !== false && $narrative !== false)
+        if($token != false && $user_id != false && $report_id != false && $sequence_number != false &&
+            $object_type != false && $object_id != false && $narrative != false && $report_date != false)
         {
             $post_vars = $this->input->post();
             $post_vars['upload_path'] = $this->upload_path;
 
-            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
-            if($system_token !== false)
+            if($system_token == $token)
             {
                 $this->response($this->success(Events::trigger('insert_object', $post_vars, 'array')));
                 exit;
@@ -336,16 +348,17 @@ class API extends REST_Controller
         $report_id = $this->input->post("report_id");
         $object_id = $this->input->post("object_id");
         $narrative = $this->input->post("narrative");
+        $report_date = $this->input->post('report_date');
 
-        if($token !== false && $user_id !== false && $report_id !== false && $sequence_number !== false &&
-            $object_type !== false && $object_id !== false && $narrative !== false)
+        if($token != false && $user_id != false && $report_id != false && $sequence_number != false &&
+            $object_type != false && $object_id != false && $narrative != false && $report_date != false)
         {
             $post_vars = $this->input->post();
             $post_vars['upload_path'] = $this->upload_path;
 
-            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
-            if($system_token !== false)
+            if($system_token == $token)
             {
                 $this->response($this->success(Events::trigger('update_object', $post_vars, 'array')));
                 exit;
@@ -375,14 +388,14 @@ class API extends REST_Controller
         $object_type = $this->input->post('object_type');
         $object_id = $this->input->post('object_id');
 
-        if($token !== false && $user_id !== false && $object_type != false && $object_id != false)
+        if($token != false && $user_id != false && $object_type != false && $object_id != false)
         {
             $post_vars = $this->input->post();
             $post_vars['upload_path'] = $this->upload_path;
 
-            $system_token = $this->user_tokens_model->get_token($user_id, $token);
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
-            if($system_token !== false)
+            if($system_token == $token)
             {
                 $this->response($this->success(Events::trigger('delete_object', $post_vars, 'array')));
                 exit;

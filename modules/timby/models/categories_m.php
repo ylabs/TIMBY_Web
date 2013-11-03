@@ -6,6 +6,7 @@ class Categories_m extends BF_Model {
     protected $table_name = "report_categories";
     protected $set_created	= FALSE;
     protected $set_modified = FALSE;
+    protected $date_format = 'datetime';
 
     public function __construct()
     {
@@ -43,11 +44,14 @@ class Categories_m extends BF_Model {
 
         if($status)
         {
-            $reports = $this->reports_m->find_by(array("category" => $id));
+            $reports = $this->reports_m->find_all_by(array("category" => $id));
 
-            foreach($reports as $report)
+            if($reports != false)
             {
-                $this->reports_m->delete($report->id);
+                foreach($reports as $report)
+                {
+                    $this->reports_m->delete($report->id);
+                }
             }
         }
 

@@ -104,7 +104,7 @@ class Admin extends Admin_Controller
                 if($this->users_model->update(array('id' => $user_id),
                     array(
                         'name' => $user_name,
-                        'password' => $password)
+                        'password' => md5($password))
                     ))
                 {
                     redirect('admin/mobileapi/index');

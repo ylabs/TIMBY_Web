@@ -19,7 +19,7 @@ class user_tokens_model extends BF_Model
         $hours = Settings::get('mobileapi_token_validity_hours');
 
         $current_date = new DateTime();
-        $current_date->sub(new DateInterval("P{$hours}H"));
+        $current_date->sub(new DateInterval("PT{$hours}H"));
 
         if($user)
         {
@@ -52,6 +52,10 @@ class user_tokens_model extends BF_Model
         $token_half = ceil($token_len / 2);
         $token = substr($token, $token_half, $token_half - 2);
 
+        // Clear off all previous tokens
+        $this->delete_tokens($user_id);
+
+        // Proceed
         $result = $this->insert(
             array(
                 'user_id' => $user_id,
@@ -73,7 +77,7 @@ class user_tokens_model extends BF_Model
         $hours = Settings::get('mobileapi_token_validity_hours');
 
         $current_date = new DateTime();
-        $current_date->sub(new DateInterval("P{$hours}H"));
+        $current_date->sub(new DateInterval("PT{$hours}H"));
 
         return $this->delete_where(array($this->where('creation_time <', $current_date->format('Y-m-d H:i:s'))));
     }
