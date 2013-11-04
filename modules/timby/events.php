@@ -50,19 +50,19 @@ class Events_Timby {
     public function insert_object($post_vars)
     {
         // Manage this event
-        return ci()->api_handlers->delete_report($post_vars['upload_path'], $post_vars);
+        return ci()->api_handlers->insert_report_object($post_vars['upload_path'], $post_vars);
     }
 
     public function update_object($post_vars)
     {
         // Manage this event
-        return ci()->api_handlers->delete_report($post_vars['upload_path'], $post_vars);
+        return ci()->api_handlers->update_report_object($post_vars['upload_path'], $post_vars);
     }
 
     public function delete_object($post_vars)
     {
         // Manage this event
-        return ci()->api_handlers->delete_report($post_vars['upload_path'], $post_vars);
+        return ci()->api_handlers->delete_report_object($post_vars['upload_path'], $post_vars);
     }
 
     public function media_uploaded($upload_data)

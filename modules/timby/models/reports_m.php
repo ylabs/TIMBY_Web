@@ -8,6 +8,10 @@ class Reports_m extends BF_Model {
     protected $set_modified = TRUE;
     protected $date_format = 'datetime';
 
+    const type_narrative = 0;
+    const type_image = 1;
+    const type_video = 2;
+
 	public function __construct()
 	{		
 		parent::__construct();
@@ -56,6 +60,67 @@ class Reports_m extends BF_Model {
         }
 
         return $result;
+    }
+
+    public function get_full_report($report_id)
+    {
+        $report = $this->find($report_id);
+        $report->objects = array();
+
+        if($report)
+        {
+            $report_sequence_items = $this->sequence()
+                ->order_by("sequence")
+                ->find_all_by(array("report_id" => $report_id));
+
+            if($report_sequence_items)
+            {
+                $item_index = 0;
+
+                foreach($report_sequence_items as $item)
+                {
+                    switch($item->item_type)
+                    {
+                        case self::type_narrative:
+                            $narrative = $this->narratives()->find($item->item_id);
+
+                            if($narrative)
+                            {
+                                $report->objects[$item_index] = new stdClass;
+                                $report->objects[$item_index]->type = $item->item_type;
+                                $report->objects[$item_index]->narrative = $narrative->narrative;
+                            }
+
+                            break;
+                        case self::type_video:
+                            $video = $this->videos()->find($item->item_id);
+
+                            if($video)
+                            {
+                                $report->objects[$item_index] = new stdClass;
+                                $report->objects[$item_index]->type = $item->item_type;
+                                $report->objects[$item_index]->file = $video->video_path;
+                            }
+
+                            break;
+                        case self::type_image:
+                            $image = $this->images()->find($item->item_id);
+
+                            if($image)
+                            {
+                                $report->objects[$item_index] = new stdClass;
+                                $report->objects[$item_index]->type = $item->item_type;
+                                $report->objects[$item_index]->file = $image->image_path;
+                            }
+                            break;
+                    }
+
+                    $item_index ++;
+                }
+            }
+        }
+
+        return $report;
     }
 
     public function sequence()

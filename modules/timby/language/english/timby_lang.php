@@ -21,3 +21,4 @@ $lang['timby:no_reports_uploaded'] = 'There are no reports uploaded';
 // Actions
 $lang['timby:approve'] = 'Approve';
 $lang['timby:disapprove'] = 'Disapprove';
+$lang['timby:download_video'] = 'Download Video';

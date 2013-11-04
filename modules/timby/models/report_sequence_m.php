@@ -15,14 +15,14 @@ class Report_sequence_m extends BF_Model {
 
     public function insert($data = null)
     {
-        $all_after = $this->where(array("sequence >" => $data["sequence"]))
+        $all_after = $this->where(array("sequence >=" => $data["sequence"], "report_id" => $data["report_id"]))
             ->find_all();
 
         if($all_after != false)
         {
             foreach($all_after as $after_item)
             {
-                parent::update($after_item->id, array("sequence" => ($all_after->sequence + 1)));
+                parent::update($after_item->id, array("sequence" => ($after_item->sequence) + 1));
             }
         }
 

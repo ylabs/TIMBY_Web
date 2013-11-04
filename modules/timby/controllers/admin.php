@@ -69,7 +69,7 @@ class Admin extends Admin_Controller
     public function view($report_id)
     {
         // here we use MY_Model's get_all() method to fetch everything
-        $item = $this->reports_m->find($report_id);
+        $item = $this->reports_m->get_full_report($report_id);
 
         // Build the view with sample/views/admin/items.php
         $this->template

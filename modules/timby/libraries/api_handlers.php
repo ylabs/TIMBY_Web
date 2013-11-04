@@ -4,6 +4,11 @@
  */
 class API_Handlers
 {
+
+    const type_narrative = 0;
+    const type_image = 1;
+    const type_video = 2;
+
     public function __construct()
     {
         // Models
@@ -20,6 +25,7 @@ class API_Handlers
     {
         unset($post_data["approved"]);
         unset($post_data["token"]);
+        unset($post_data["key"]);
 
         $status = ci()->reports_m->insert($post_data);
 
@@ -36,6 +42,7 @@ class API_Handlers
         unset($post_data["approved"]);
         unset($post_data["token"]);
         unset($post_data["report_id"]);
+        unset($post_data["key"]);
 
         $status = ci()->reports_m->update($report_id, $post_data);
 
@@ -50,6 +57,7 @@ class API_Handlers
     public function delete_report($post_data)
     {
         unset($post_data["token"]);
+        unset($post_data["key"]);
 
         $status = ci()->reports_m->delete($post_data["report_id"]);
 
@@ -67,6 +75,7 @@ class API_Handlers
         set_time_limit(0);
 
         unset($post_data["token"]);
+        unset($post_data["key"]);
 
         // Upload configuration
         $config = array();
@@ -92,18 +101,21 @@ class API_Handlers
                 $table_to_use = "narratives";
                 $path_field_to_use = "";
                 $field_to_use = "narrative";
+                $object_type = self::type_narrative;
                 break;
             case "video":
                 $config['upload_path'] = rtrim($upload_path, "/")."/videos";
                 $table_to_use = "videos";
                 $path_field_to_use = "video_path";
                 $field_to_use = "video";
+                $object_type = self::type_video;
                 break;
             case "image":
                 $config['upload_path'] = rtrim($upload_path, "/")."/images";
                 $table_to_use = "images";
                 $path_field_to_use = "image_path";
                 $field_to_use = "image";
+                $object_type = self::type_image;
                 break;
             default:
                 return false;
@@ -154,7 +166,7 @@ class API_Handlers
             return false;
         }
 
-        return ci()->reports_m->report_sequence()->insert(array(
+        return ci()->reports_m->sequence()->insert(array(
             "sequence" => $sequence_number,
             "report_id" => $report_id,
             "item_type" => $object_type,
@@ -168,6 +180,7 @@ class API_Handlers
         set_time_limit(0);
 
         unset($post_data["token"]);
+        unset($post_data["key"]);
 
         // Upload configuration
         $config = array();
@@ -196,18 +209,21 @@ class API_Handlers
                 $table_to_use = "narratives";
                 $path_field_to_use = "";
                 $field_to_use = "narrative";
+                $object_type = self::type_narrative;
                 break;
             case "video":
                 $config['upload_path'] = rtrim($upload_path, "/")."/videos";
                 $table_to_use = "videos";
                 $path_field_to_use = "video_path";
                 $field_to_use = "video";
+                $object_type = self::type_video;
                 break;
             case "image":
                 $config['upload_path'] = rtrim($upload_path, "/")."/images";
                 $table_to_use = "images";
                 $path_field_to_use = "image_path";
                 $field_to_use = "image";
+                $object_type = self::type_image;
                 break;
             default:
                 return false;
@@ -275,7 +291,7 @@ class API_Handlers
             return false;
         }
 
-        return ci()->reports_m->report_sequence()->update(
+        return ci()->reports_m->sequence()->update(
             array("report_id" => $report_id),
             array(
                 "sequence" => $sequence_number,
@@ -288,6 +304,7 @@ class API_Handlers
     public function delete_report_object($upload_path, $post_data)
     {
         unset($post_data["token"]);
+        unset($post_data["key"]);
 
         $object_type = $post_data["object_type"];
         $table_to_use = "";
