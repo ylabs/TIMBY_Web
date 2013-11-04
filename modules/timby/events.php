@@ -14,12 +14,19 @@ class Events_Timby {
         Events::register('delete_report', array($this, 'delete_report'));
 
         // Report data events
+        Events::register('get_categories', array($this, 'get_categories'));
         Events::register('insert_object', array($this, 'insert_object'));
         Events::register('update_object', array($this, 'update_object'));
         Events::register('delete_object', array($this, 'delete_object'));
 
         // Media functions - useful for things like decryption
         Events::register('media_uploaded', array($this, 'media_uploaded'));
+    }
+
+    public function get_categories()
+    {
+        // Manage this event
+        return ci()->api_handlers->get_categories();
     }
     
     public function create_report($post_vars)

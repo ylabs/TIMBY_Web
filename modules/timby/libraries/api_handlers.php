@@ -11,6 +11,11 @@ class API_Handlers
         ci()->load->model('timby/reports_m');
     }
 
+    public function get_categories()
+    {
+        return ci()->categories_m->find_all();
+    }
+
     public function create_report($post_data)
     {
         unset($post_data["approved"]);
