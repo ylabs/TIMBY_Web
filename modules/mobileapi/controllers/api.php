@@ -368,7 +368,7 @@ class API extends REST_Controller
             $object_type != false && $object_id != false && $narrative != false && $report_date != false)
         {
             $post_vars = $this->input->post();
-            $post_vars['upload_path'] = UPLOAD_PATH;
+            $post_vars['upload_path'] = dirname(UPLOAD_PATH);
 
             $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 
@@ -413,7 +413,7 @@ class API extends REST_Controller
             $object_id != false && $narrative != false && $report_date != false)
         {
             $post_vars = $this->input->post();
-            $post_vars['upload_path'] = UPLOAD_PATH;
+            $post_vars['upload_path'] = dirname(UPLOAD_PATH);
 
             unset($post_vars["sequence"]);
 

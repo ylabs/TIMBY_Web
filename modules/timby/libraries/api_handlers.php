@@ -104,14 +104,14 @@ class API_Handlers
                 $object_type = self::type_narrative;
                 break;
             case "video":
-                $config['upload_path'] = rtrim($upload_path, "/")."/videos";
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/videos";
                 $table_to_use = "videos";
                 $path_field_to_use = "video_path";
                 $field_to_use = "video";
                 $object_type = self::type_video;
                 break;
             case "image":
-                $config['upload_path'] = rtrim($upload_path, "/")."/images";
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/images";
                 $table_to_use = "images";
                 $path_field_to_use = "image_path";
                 $field_to_use = "image";
@@ -134,7 +134,7 @@ class API_Handlers
             }
             else
             {
-                return false;
+                return $config['upload_path'];
             }
 
             Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
@@ -147,6 +147,7 @@ class API_Handlers
             $object_id = ci()->reports_m->{$table_to_use}()->insert(
                 array(
                     "{$path_field_to_use}" => $upload_data["file_name"],
+                    "{$field_to_use}" => json_encode(array("original_file" => $upload_data["file_name"])),
                     "report_id" => $report_id,
                 )
             );
@@ -166,12 +167,14 @@ class API_Handlers
             return false;
         }
 
-        return ci()->reports_m->sequence()->insert(array(
+        $sequence_result = ci()->reports_m->sequence()->insert(array(
             "sequence" => $sequence_number,
             "report_id" => $report_id,
             "item_type" => $object_type,
             "item_id" => $object_id,
         ));
+
+        return array("object_id" => $object_id, "sequence_id" => $sequence_result);
     }
 
     public function update_report_object($upload_path, $post_data)
@@ -211,14 +214,14 @@ class API_Handlers
                 $object_type = self::type_narrative;
                 break;
             case "video":
-                $config['upload_path'] = rtrim($upload_path, "/")."/videos";
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/videos";
                 $table_to_use = "videos";
                 $path_field_to_use = "video_path";
                 $field_to_use = "video";
                 $object_type = self::type_video;
                 break;
             case "image":
-                $config['upload_path'] = rtrim($upload_path, "/")."/images";
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/images";
                 $table_to_use = "images";
                 $path_field_to_use = "image_path";
                 $field_to_use = "image";
@@ -267,9 +270,10 @@ class API_Handlers
         if($path_field_to_use != "")
         {
             $object_id = ci()->reports_m->{$table_to_use}()->update(
-                array("id" => $old_object_id),
+                $old_object_id,
                 array(
                     "{$path_field_to_use}" => $upload_data["file_name"],
+                    "{$field_to_use}" => json_encode(array("original_file" => $upload_data["file_name"])),
                     "report_id" => $report_id,
                 )
             );
@@ -277,7 +281,7 @@ class API_Handlers
         else
         {
             $object_id = ci()->reports_m->{$table_to_use}()->update(
-                array("id" => $old_object_id),
+                $old_object_id,
                 array(
                     "{$field_to_use}" => $narrative,
                     "report_id" => $report_id,

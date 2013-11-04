@@ -19,11 +19,11 @@
                         break;
                     case 1:
                         // Image
-                        echo("<img src='".site_url(UPLOAD_PATH.'images/'.$object->file)."'/>");
+                        echo("<img src='".site_url(UPLOAD_PATH.'timby/images/'.$object->file)."'/>");
                         break;
                     case 2:
                         // Video
-                        echo anchor(site_url(UPLOAD_PATH.'images/'.$object->file), lang('timby:download_video'));
+                        echo anchor(site_url(UPLOAD_PATH.'timby/videos/'.$object->file), lang('timby:download_video'), "target='_blank'");
                         break;
                 }
 
