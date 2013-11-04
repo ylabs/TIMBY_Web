@@ -403,18 +403,19 @@ class API extends REST_Controller
         $user_id = $this->input->post('user_id');
         $key = $this->input->post('key');
 
-        $sequence_number = $this->input->post("sequence");
         $object_type = $this->input->post("object_type");
         $report_id = $this->input->post("report_id");
         $object_id = $this->input->post("object_id");
         $narrative = $this->input->post("narrative");
         $report_date = $this->input->post('report_date');
 
-        if($token != false && $user_id != false && $report_id != false && $sequence_number != false &&
-            $object_type != false && $object_id != false && $narrative != false && $report_date != false)
+        if($token != false && $user_id != false && $report_id != false &&  $object_type != false &&
+            $object_id != false && $narrative != false && $report_date != false)
         {
             $post_vars = $this->input->post();
             $post_vars['upload_path'] = UPLOAD_PATH;
+
+            unset($post_vars["sequence"]);
 
             $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
 

@@ -31,17 +31,6 @@ class Report_sequence_m extends BF_Model {
 
     public function update($where = null, $data = null)
     {
-        $all_after = $this->where(array("sequence >" => $data["sequence"]))
-            ->find_all();
-
-        if($all_after != false)
-        {
-            foreach($all_after as $after_item)
-            {
-                parent::update($after_item->id, array("sequence" => ($all_after->sequence + 1)));
-            }
-        }
-
         return parent::update($where, $data);
     }
 }

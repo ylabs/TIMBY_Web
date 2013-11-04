@@ -189,7 +189,6 @@ class API_Handlers
         $config['max_width']  = '1024';
         $config['max_height']  = '768';
 
-        $sequence_number = $post_data["sequence"];
         $object_type = $post_data["object_type"];
         $report_id = $post_data["report_id"];
         $object_id = $post_data["object_id"];
@@ -290,15 +289,6 @@ class API_Handlers
         {
             return false;
         }
-
-        return ci()->reports_m->sequence()->update(
-            array("report_id" => $report_id),
-            array(
-                "sequence" => $sequence_number,
-                "item_type" => $object_type,
-                "item_id" => $object_id,
-            )
-        );
     }
 
     public function delete_report_object($upload_path, $post_data)
