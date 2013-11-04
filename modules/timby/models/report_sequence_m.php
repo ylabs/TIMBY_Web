@@ -33,4 +33,25 @@ class Report_sequence_m extends BF_Model {
     {
         return parent::update($where, $data);
     }
+
+    public function delete_object($data, $object_id)
+    {
+        $item = $this->find_by(array("report_id" => $data["report_id"], "item_id" => $object_id));
+
+        if($item)
+        {
+            $all_after = $this->where(array("sequence >=" => $item->sequence, "report_id" => $data["report_id"]))
+                ->find_all();
+
+            if($all_after != false)
+            {
+                foreach($all_after as $after_item)
+                {
+                    parent::update($after_item->id, array("sequence" => ($after_item->sequence) - 1));
+                }
+            }
+        }
+
+        return parent::delete_where(array("item_id" => $object_id));
+    }
 }

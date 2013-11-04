@@ -325,8 +325,15 @@ class API_Handlers
 
         $object_data = ci()->reports_m->{$table_to_use}()->find($object_id);
 
-        Events::trigger('pre_media_deleted', array("file_name" => $new_upload_path."/".$object_data->{$path_field_to_use}));
+        if($path_field_to_use !== "")
+            Events::trigger('pre_media_deleted', array("file_name" => $new_upload_path."/".$object_data->{$path_field_to_use}));
 
-        unlink($new_upload_path."/".$object_data->{$path_field_to_use});
+        // Do actual delete
+
+        ci()->reports_m->sequence()->delete_object($post_data, $object_id);
+        ci()->reports_m->{$table_to_use}()->delete($object_id);
+
+        if($path_field_to_use !== "")
+            unlink($new_upload_path."/".$object_data->{$path_field_to_use});
     }
 }
