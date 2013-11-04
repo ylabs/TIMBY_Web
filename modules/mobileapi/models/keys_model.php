@@ -46,4 +46,11 @@ class keys_model extends BF_Model
     {
         return $this->update(array("id" => $key_id), array('user_id' => $user_id));
     }
+
+    public function validate_user_key($key, $user_id)
+    {
+        $key = $this->find_by(array('user_id' => $user_id, 'key' => $key));
+
+        return $key;
+    }
 }

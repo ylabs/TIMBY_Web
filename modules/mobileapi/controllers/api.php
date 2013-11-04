@@ -16,6 +16,9 @@ class API extends REST_Controller
     const msg_token_invalid_id = "101";
     const msg_token_invalid_text = "Token is invalid";
 
+    const msg_token_invalid_key_id = "102";
+    const msg_token_invalid_key_text = "Invalid API Key";
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -45,6 +48,11 @@ class API extends REST_Controller
     private function success($message)
     {
         return array("status" => "OK", "message" => $message);
+    }
+
+    public function validate_key($user_id, $key)
+    {
+        return $this->keys_model->validate_user_key($key, $user_id);
     }
 
 	/**
@@ -165,6 +173,7 @@ class API extends REST_Controller
     {
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
 
         if($token != false && $user_id != false)
         {
@@ -172,7 +181,10 @@ class API extends REST_Controller
 
             if($system_token != false)
             {
-                $this->response(Events::trigger('get_categories', null, 'array'));
+                if($this->validate_key($user_id, $key))
+                    $this->response(Events::trigger('get_categories', null, 'array'));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
                 exit;
             }
             else
@@ -196,6 +208,7 @@ class API extends REST_Controller
     {
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
 
         $title = $this->input->post('title');
         $category = $this->input->post('category');
@@ -221,7 +234,10 @@ class API extends REST_Controller
 
             if($system_token == $token)
             {
-                $this->response($this->success(Events::trigger('create_report', $post_vars, 'array')));
+                if($this->validate_key($user_id, $key))
+                    $this->response($this->success(Events::trigger('create_report', $post_vars, 'array')));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
                 exit;
             }
             else
@@ -245,6 +261,7 @@ class API extends REST_Controller
     {
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
 
         $report_id = $this->input->post('report_id');
         $title = $this->input->post('title');
@@ -272,7 +289,10 @@ class API extends REST_Controller
 
             if($system_token == $token)
             {
-                $this->response($this->success(Events::trigger('update_report', $post_vars, 'array')));
+                if($this->validate_key($user_id, $key))
+                    $this->response($this->success(Events::trigger('update_report', $post_vars, 'array')));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
                 exit;
             }
             else
@@ -296,6 +316,7 @@ class API extends REST_Controller
     {
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
 
         $report_id = $this->input->post('report_id');
 
@@ -307,7 +328,10 @@ class API extends REST_Controller
 
             if($system_token == $token)
             {
-                $this->response($this->success(Events::trigger('delete_report', $post_vars, 'array')));
+                if($this->validate_key($user_id, $key))
+                    $this->response($this->success(Events::trigger('delete_report', $post_vars, 'array')));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
                 exit;
             }
             else
@@ -331,6 +355,7 @@ class API extends REST_Controller
     {
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
 
         $sequence_number = $this->input->post("sequence");
         $object_type = $this->input->post("object_type");
@@ -349,7 +374,10 @@ class API extends REST_Controller
 
             if($system_token == $token)
             {
-                $this->response($this->success(Events::trigger('insert_object', $post_vars, 'array')));
+                if($this->validate_key($user_id, $key))
+                    $this->response($this->success(Events::trigger('insert_object', $post_vars, 'array')));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
                 exit;
             }
             else
@@ -373,6 +401,7 @@ class API extends REST_Controller
     {
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
 
         $sequence_number = $this->input->post("sequence");
         $object_type = $this->input->post("object_type");
@@ -391,7 +420,10 @@ class API extends REST_Controller
 
             if($system_token == $token)
             {
-                $this->response($this->success(Events::trigger('update_object', $post_vars, 'array')));
+                if($this->validate_key($user_id, $key))
+                    $this->response($this->success(Events::trigger('update_object', $post_vars, 'array')));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
                 exit;
             }
             else
@@ -415,6 +447,7 @@ class API extends REST_Controller
     {
         $token = $this->input->post('token');
         $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
 
         $object_type = $this->input->post('object_type');
         $object_id = $this->input->post('object_id');
@@ -428,7 +461,10 @@ class API extends REST_Controller
 
             if($system_token == $token)
             {
-                $this->response($this->success(Events::trigger('delete_object', $post_vars, 'array')));
+                if($this->validate_key($user_id, $key))
+                    $this->response($this->success(Events::trigger('delete_object', $post_vars, 'array')));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
                 exit;
             }
             else
