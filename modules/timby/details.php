@@ -74,6 +74,10 @@ class Module_Timby extends Module {
                 'type' => 'INT',
                 'default' => 0,
             ),
+            'deleted' => array(
+                'type' => 'INT',
+                'default' => 0,
+            ),
             'carto_db_id' => array(
                 'type' => 'BIGINT',
                 'default' => 0,
@@ -130,6 +134,10 @@ class Module_Timby extends Module {
             'narrative' => array(
                 'type' => 'TEXT',
             ),
+            'deleted' => array(
+                'type' => 'INT',
+                'default' => 0,
+            ),
             'created_on' => array(
                 'type' => 'datetime',
             ),
@@ -156,6 +164,10 @@ class Module_Timby extends Module {
             'image' => array(
                 'type' => 'TEXT',
             ),
+            'deleted' => array(
+                'type' => 'INT',
+                'default' => 0,
+            ),
             'created_on' => array(
                 'type' => 'datetime',
             ),
@@ -181,6 +193,10 @@ class Module_Timby extends Module {
             ),
             'video' => array(
                 'type' => 'TEXT',
+            ),
+            'deleted' => array(
+                'type' => 'INT',
+                'default' => 0,
             ),
             'created_on' => array(
                 'type' => 'datetime',
@@ -297,6 +313,21 @@ class Module_Timby extends Module {
         );
 
         $this->db->insert('settings', $decryption_key);
+
+        $report_soft_delete = array(
+            'slug' => 'report_soft_delete',
+            'title' => 'Soft delete reports and objects?',
+            'description' => 'Soft delete reports and objects?',
+            '`default`' => 'true',
+            '`value`' => 'true',
+            'type' => 'radio',
+            '`options`' => 'true=Yes|false=No',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $report_soft_delete);
 
         // Return status
 

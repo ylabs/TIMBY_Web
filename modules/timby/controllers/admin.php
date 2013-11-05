@@ -28,6 +28,7 @@ class Admin extends Admin_Controller
 
 		// here we use MY_Model's get_all() method to fetch everything
 		$items = $this->reports_m
+            ->where('deleted', 0)
             ->limit($pagination['limit'], $pagination['offset'])
             ->find_all();
 

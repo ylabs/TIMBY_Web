@@ -16,6 +16,13 @@ class API_Handlers
         ci()->load->model('timby/reports_m');
     }
 
+    private function verify_report_owner($report_id, $user_id)
+    {
+        $result = ci()->reports_m->find_by(array('id' => $report_id, 'user_id' => $user_id));
+
+        return $result;
+    }
+
     public function get_categories()
     {
         return ci()->categories_m->find_all();
@@ -44,11 +51,14 @@ class API_Handlers
         unset($post_data["report_id"]);
         unset($post_data["key"]);
 
-        $status = ci()->reports_m->update($report_id, $post_data);
-
-        if($status != false)
+        if($this->verify_report_owner($post_data["report_id"], $post_data["user_id"]))
         {
-            return array("status" => $status);
+            $status = ci()->reports_m->update($report_id, $post_data);
+
+            if($status != false)
+            {
+                return array("status" => $status);
+            }
         }
 
         return false;
@@ -58,12 +68,16 @@ class API_Handlers
     {
         unset($post_data["token"]);
         unset($post_data["key"]);
+        $soft_delete = Settings::get('report_soft_delete') == "true" ? true : false;
 
-        $status = ci()->reports_m->delete($post_data["report_id"]);
-
-        if($status)
+        if($this->verify_report_owner($post_data["report_id"], $post_data["user_id"]))
         {
-            return array("status" => $status);
+            $status = ci()->reports_m->delete($post_data["report_id"], $soft_delete);
+
+            if($status)
+            {
+                return array("status" => $status);
+            }
         }
 
         return false;
@@ -77,12 +91,16 @@ class API_Handlers
         unset($post_data["token"]);
         unset($post_data["key"]);
 
+        // Verify if owner
+        if(!$this->verify_report_owner($post_data["report_id"], $post_data["user_id"]))
+            return false;
+
         // Upload configuration
         $config = array();
         $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size']	= '100';
-        $config['max_width']  = '1024';
-        $config['max_height']  = '768';
+        $config['max_size']	= 0;
+        $config['max_width']  = 0;
+        $config['max_height']  = 0;
 
         $sequence_number = $post_data["sequence"];
         $object_type = $post_data["object_type"];
@@ -134,7 +152,7 @@ class API_Handlers
             }
             else
             {
-                return $config['upload_path'];
+                return ci()->upload->display_errors();
             }
 
             Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
@@ -188,9 +206,9 @@ class API_Handlers
         // Upload configuration
         $config = array();
         $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size']	= '100';
-        $config['max_width']  = '1024';
-        $config['max_height']  = '768';
+        $config['max_size']	= 0;
+        $config['max_width']  = 0;
+        $config['max_height']  = 0;
 
         $object_type = $post_data["object_type"];
         $report_id = $post_data["report_id"];
@@ -235,6 +253,10 @@ class API_Handlers
         // Get the old object (To delete if necessary)
 
         $object_data = ci()->reports_m->{$table_to_use}()->find($object_id);
+
+        // Verify report owner
+        if(!$this->verify_report_owner($object_data->report_id, $post_data["user_id"]))
+            return false;
 
         if(!$object_data)
         {
@@ -300,6 +322,8 @@ class API_Handlers
         unset($post_data["token"]);
         unset($post_data["key"]);
 
+        $soft_delete = Settings::get('report_soft_delete') == "true" ? true : false;
+
         $object_type = $post_data["object_type"];
         $table_to_use = "";
         $object_id = $post_data["object_id"];
@@ -329,15 +353,22 @@ class API_Handlers
 
         $object_data = ci()->reports_m->{$table_to_use}()->find($object_id);
 
+        // Verify report owner
+        if(!$this->verify_report_owner($object_data->report_id, $post_data["user_id"]))
+            return false;
+
         if($path_field_to_use !== "")
             Events::trigger('pre_media_deleted', array("file_name" => $new_upload_path."/".$object_data->{$path_field_to_use}));
 
         // Do actual delete
 
-        ci()->reports_m->sequence()->delete_object($post_data, $object_id);
-        ci()->reports_m->{$table_to_use}()->delete($object_id);
+        if(!$soft_delete)
+            ci()->reports_m->sequence()->delete_object($post_data, $object_id);
 
-        if($path_field_to_use !== "")
-            unlink($new_upload_path."/".$object_data->{$path_field_to_use});
+        ci()->reports_m->{$table_to_use}()->delete($object_id, $soft_delete);
+
+        if(!$soft_delete)
+            if($path_field_to_use !== "")
+                unlink($new_upload_path."/".$object_data->{$path_field_to_use});
     }
 }

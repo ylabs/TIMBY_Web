@@ -12,4 +12,16 @@ class Report_videos_m extends BF_Model {
     {
         parent::__construct();
     }
+
+    public function delete($id = null, $soft_delete = true)
+    {
+        if($soft_delete)
+        {
+            $this->update($id, array('deleted' => 1));
+        }
+        else
+        {
+            parent::delete($id);
+        }
+    }
 }

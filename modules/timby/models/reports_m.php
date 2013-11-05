@@ -46,17 +46,25 @@ class Reports_m extends BF_Model {
         return parent::update($where, $data);
     }
 
-    public function delete($id = NULL)
+    public function delete($id = NULL, $soft_delete = true)
     {
-        $result = parent::delete($id);
+        $result = null;
 
-        if($result)
+        if($soft_delete)
+            $result = parent::update($id, array("deleted" => 1));
+        else
+            $result = parent::delete($id);
+
+        if(!$soft_delete)
         {
-            $this->sequence()->delete_where(array("report_id" => $id));
-            $this->sequence()->delete_where(array("report_id" => $id));
-            $this->narratives()->delete_where(array("report_id" => $id));
-            $this->images()->delete_where(array("report_id" => $id));
-            $this->videos()->delete_where(array("report_id" => $id));
+            if($result)
+            {
+                $this->sequence()->delete_where(array("report_id" => $id));
+                $this->sequence()->delete_where(array("report_id" => $id));
+                $this->narratives()->delete_where(array("report_id" => $id));
+                $this->images()->delete_where(array("report_id" => $id));
+                $this->videos()->delete_where(array("report_id" => $id));
+            }
         }
 
         return $result;
@@ -86,9 +94,12 @@ class Reports_m extends BF_Model {
 
                             if($narrative)
                             {
-                                $report->objects[$item_index] = new stdClass;
-                                $report->objects[$item_index]->type = $item->item_type;
-                                $report->objects[$item_index]->narrative = $narrative->narrative;
+                                if($narrative->deleted == 0)
+                                {
+                                    $report->objects[$item_index] = new stdClass;
+                                    $report->objects[$item_index]->type = $item->item_type;
+                                    $report->objects[$item_index]->narrative = $narrative->narrative;
+                                }
                             }
 
                             break;
@@ -97,9 +108,12 @@ class Reports_m extends BF_Model {
 
                             if($video)
                             {
-                                $report->objects[$item_index] = new stdClass;
-                                $report->objects[$item_index]->type = $item->item_type;
-                                $report->objects[$item_index]->file = $video->video_path;
+                                if($video->deleted == 0)
+                                {
+                                    $report->objects[$item_index] = new stdClass;
+                                    $report->objects[$item_index]->type = $item->item_type;
+                                    $report->objects[$item_index]->file = $video->video_path;
+                                }
                             }
 
                             break;
@@ -108,9 +122,12 @@ class Reports_m extends BF_Model {
 
                             if($image)
                             {
-                                $report->objects[$item_index] = new stdClass;
-                                $report->objects[$item_index]->type = $item->item_type;
-                                $report->objects[$item_index]->file = $image->image_path;
+                                if($image->deleted == 0)
+                                {
+                                    $report->objects[$item_index] = new stdClass;
+                                    $report->objects[$item_index]->type = $item->item_type;
+                                    $report->objects[$item_index]->file = $image->image_path;
+                                }
                             }
                             break;
                     }
