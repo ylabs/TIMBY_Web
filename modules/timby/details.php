@@ -31,6 +31,17 @@ class Module_Timby extends Module {
                             'class' => 'add'
                         )
                     )
+                ),
+                'sectors' => array(
+                    'name' 	=> 'timby:sectors', // These are translated from your language file
+                    'uri' 	=> 'admin/timby/sectors',
+                    'shortcuts' => array(
+                        'create' => array(
+                            'name' 	=> 'timby:create',
+                            'uri' 	=> 'admin/timby/sectors/create',
+                            'class' => 'add'
+                        )
+                    )
                 )
             )
 		);
@@ -56,6 +67,10 @@ class Module_Timby extends Module {
                 'constraint' => '250'
             ),
             'category' => array(
+                'type' => 'INT',
+                'default' => 0,
+            ),
+            'sector' => array(
                 'type' => 'INT',
                 'default' => 0,
             ),
@@ -223,6 +238,22 @@ class Module_Timby extends Module {
             ),
         );
 
+        $report_sectors = array(
+            'id' => array(
+                'type' => 'BIGINT',
+                'constraint' => '11',
+                'auto_increment' => TRUE
+            ),
+            'sector' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250',
+            ),
+            'slug' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250',
+            ),
+        );
+
         // Create the upload paths
         is_dir($this->upload_path.'timby/images') OR @mkdir($this->upload_path.'timby/images',0777,TRUE);
         is_dir($this->upload_path.'timby/videos') OR @mkdir($this->upload_path.'timby/videos',0777,TRUE);
@@ -252,6 +283,10 @@ class Module_Timby extends Module {
         $this->dbforge->add_field($report_categories);
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('report_categories');
+
+        $this->dbforge->add_field($report_sectors);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('report_sectors');
 
         // Module settings
         $youtube_api_key = array(
@@ -343,6 +378,7 @@ class Module_Timby extends Module {
         $this->dbforge->drop_table('report_videos');
         $this->dbforge->drop_table('report_images');
         $this->dbforge->drop_table('report_categories');
+        $this->dbforge->drop_table('report_sectors');
 
         // Remove settings
         $this->db->delete('settings', array('module' => 'timby'));

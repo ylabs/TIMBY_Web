@@ -201,6 +201,41 @@ class API extends REST_Controller
     }
 
     /**
+     * Get sector list
+     */
+
+    public function getsectors_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
+
+        if($token != false && $user_id != false)
+        {
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
+
+            if($system_token != false)
+            {
+                if($this->validate_key($user_id, $key))
+                    $this->response(Events::trigger('get_sectors', null, 'array'));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
      * Create a new report
      */
 
@@ -211,12 +246,13 @@ class API extends REST_Controller
         $key = $this->input->post('key');
 
         $title = $this->input->post('title');
-        $category = $this->input->post('category');
+        $sector = $this->input->post('sector');
         $report_date = $this->input->post('report_date');
         $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
         $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
 
-        if($token != false && $user_id != false && $title != false && $category != false && $report_date != false)
+        if($token != false && $user_id != false && $title != false && $report_date != false &&
+            $sector != false)
         {
             $post_vars = $this->input->post();
 
@@ -265,13 +301,13 @@ class API extends REST_Controller
 
         $report_id = $this->input->post('report_id');
         $title = $this->input->post('title');
-        $category = $this->input->post('category');
+        $sector = $this->input->post('sector');
         $report_date = $this->input->post('report_date');
         $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
         $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
 
-        if($token != false && $user_id != false && $title != false && $category != false &&
-            $report_id != false && $report_date != false)
+        if($token != false && $user_id != false && $title != false &&
+            $report_id != false && $report_date != false && $sector != false)
         {
             $post_vars = $this->input->post();
 

@@ -5,6 +5,8 @@ $lang['timby:create'] = 'Create';
 $lang['timby:reports'] = 'Reports';
 $lang['timby:categories'] = 'Categories';
 $lang['timby:category'] = 'Category';
+$lang['timby:sectors'] = 'Sectors';
+$lang['timby:sector'] = 'Sector';
 $lang['timby:report'] = 'Report';
 
 // Category screens
@@ -15,7 +17,12 @@ $lang['timby:edit_category'] = 'Edit Category';
 $lang['timby:view_report'] = 'View Report';
 $lang['timby:edit_report'] = 'Edit Report';
 
+// Sectors
+$lang['timby:create_sector'] = 'Create Sector';
+$lang['timby:edit_sector'] = 'Edit Sector';
+
 $lang['timby:no_categories'] = 'There are no categories available';
+$lang['timby:no_sectors'] = 'There are no sectors available';
 $lang['timby:no_reports_uploaded'] = 'There are no reports uploaded';
 
 // Actions

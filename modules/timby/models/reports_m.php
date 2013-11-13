@@ -28,9 +28,9 @@ class Reports_m extends BF_Model {
 
     public function insert($data = NULL)
     {
-        if(isset($data["category"]))
+        if(isset($data["title"]))
         {
-            $data["slug"] = $this->timby_utilities->get_slug($data["category"]);
+            $data["slug"] = $this->timby_utilities->get_slug($data["title"]);
         }
 
         return parent::insert($data);
@@ -38,9 +38,9 @@ class Reports_m extends BF_Model {
 
     public function update($where = NULL, $data = NULL)
     {
-        if(isset($data["category"]))
+        if(isset($data["title"]))
         {
-            $data["slug"] = $this->timby_utilities->get_slug($data["category"]);
+            $data["slug"] = $this->timby_utilities->get_slug($data["title"]);
         }
 
         return parent::update($where, $data);

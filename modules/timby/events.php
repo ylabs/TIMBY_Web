@@ -15,6 +15,7 @@ class Events_Timby {
 
         // Report data events
         Events::register('get_categories', array($this, 'get_categories'));
+        Events::register('get_sectors', array($this, 'get_sectors'));
         Events::register('insert_object', array($this, 'insert_object'));
         Events::register('update_object', array($this, 'update_object'));
         Events::register('delete_object', array($this, 'delete_object'));
@@ -27,6 +28,12 @@ class Events_Timby {
     {
         // Manage this event
         return ci()->api_handlers->get_categories();
+    }
+
+    public function get_sectors()
+    {
+        // Manage this event
+        return ci()->api_handlers->get_sectors();
     }
     
     public function create_report($post_vars)

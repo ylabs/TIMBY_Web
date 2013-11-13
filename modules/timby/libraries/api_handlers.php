@@ -13,6 +13,7 @@ class API_Handlers
     {
         // Models
         ci()->load->model('timby/categories_m');
+        ci()->load->model('timby/sectors_m');
         ci()->load->model('timby/reports_m');
     }
 
@@ -26,6 +27,11 @@ class API_Handlers
     public function get_categories()
     {
         return ci()->categories_m->find_all();
+    }
+
+    public function get_sectors()
+    {
+        return ci()->sectors_m->find_all();
     }
 
     public function create_report($post_data)
@@ -48,11 +54,12 @@ class API_Handlers
     {
         unset($post_data["approved"]);
         unset($post_data["token"]);
-        unset($post_data["report_id"]);
         unset($post_data["key"]);
 
         if($this->verify_report_owner($post_data["report_id"], $post_data["user_id"]))
         {
+            unset($post_data["report_id"]);
+
             $status = ci()->reports_m->update($report_id, $post_data);
 
             if($status != false)
