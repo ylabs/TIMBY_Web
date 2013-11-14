@@ -74,6 +74,11 @@ class Module_Timby extends Module {
                 'type' => 'INT',
                 'default' => 0,
             ),
+            'company' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250',
+                'default' => '',
+            ),
             'user_id' => array(
                 'type' => 'INT',
             ),
@@ -142,6 +147,10 @@ class Module_Timby extends Module {
                 'constraint' => '11',
                 'auto_increment' => TRUE
             ),
+            'title' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250'
+            ),
             'report_id' => array(
                 'type' => 'BIGINT',
                 'constraint' => '11',
@@ -167,6 +176,10 @@ class Module_Timby extends Module {
                 'type' => 'BIGINT',
                 'constraint' => '11',
                 'auto_increment' => TRUE
+            ),
+            'title' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250'
             ),
             'report_id' => array(
                 'type' => 'BIGINT',
@@ -197,6 +210,10 @@ class Module_Timby extends Module {
                 'type' => 'BIGINT',
                 'constraint' => '11',
                 'auto_increment' => TRUE
+            ),
+            'title' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250'
             ),
             'report_id' => array(
                 'type' => 'BIGINT',
