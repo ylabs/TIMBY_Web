@@ -76,6 +76,8 @@ class Admin extends Admin_Controller
         // Build the view with sample/views/admin/items.php
         $this->template
             ->title($this->module_details['name'])
+            ->append_js('module::leaflet/leaflet.js')
+            ->append_css('module::leaflet.css')
             ->set('item', $item)
             ->set('report_id', $report_id)
             ->build('admin/reports/view');
