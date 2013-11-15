@@ -3,7 +3,9 @@
  * Event handler for the TIMBY Module
  */
 class Events_Timby {
-    
+
+    const tag_type_blog = 'blog';
+
     public function __construct()
     {
         ci()->load->library('timby/api_handlers');
@@ -19,6 +21,11 @@ class Events_Timby {
         Events::register('insert_object', array($this, 'insert_object'));
         Events::register('update_object', array($this, 'update_object'));
         Events::register('delete_object', array($this, 'delete_object'));
+
+        // Blog data events
+        Events::register('post_updated', array($this, 'post_updated'));
+        Events::register('post_created', array($this, 'post_created'));
+        Events::register('post_deleted', array($this, 'post_deleted'));
 
         // Media functions - useful for things like decryption
         Events::register('media_uploaded', array($this, 'media_uploaded'));
@@ -76,6 +83,71 @@ class Events_Timby {
     {
         // Decrypt media
         $file_name = $upload_data["file_name"];
+    }
+
+    private function load_tags_models()
+    {
+        ci()->load->model('timby/tagged_reports_m');
+    }
+
+    public function post_updated($id)
+    {
+        // Update streams data
+        $post_vars = ci()->input->post();
+
+        if($post_vars)
+        {
+            if(isset($post_vars["stream_reporttag"]))
+            {
+                $this->load_tags_models();
+                ci()->tagged_reports_m->delete_where(array('object_id' => $id, 'tag_type' => self::tag_type_blog));
+
+                foreach($post_vars["stream_reporttag"] as $report_id)
+                {
+                    ci()->tagged_reports_m->insert(array('object_id' => $id, 'tag_type' => self::tag_type_blog,
+                        'report_id' => $report_id));
+                }
+            }
+        }
+    }
+
+    public function post_created($id)
+    {
+        // Update streams data
+        $post_vars = ci()->input->post();
+
+        if($post_vars)
+        {
+            if(isset($post_vars["stream_reporttag"]))
+            {
+                $this->load_tags_models();
+
+                foreach($post_vars["stream_reporttag"] as $report_id)
+                {
+                    ci()->tagged_reports_m->insert(array('object_id' => $id, 'tag_type' => self::tag_type_blog,
+                        'report_id' => $report_id));
+                }
+            }
+        }
+    }
+
+    public function post_deleted($ids)
+    {
+        // Delete report tags (cleanup)
+        $post_vars = ci()->input->post();
+
+        if($post_vars)
+        {
+            if(isset($post_vars["stream_reporttag"]))
+            {
+                $this->load_tags_models();
+
+                foreach($ids as $id)
+                {
+                    ci()->tagged_reports_m->delete_where(array('object_id' => $id, 'tag_type' => self::tag_type_blog));
+                }
+            }
+        }
     }
 }
 /* End of file events.php */

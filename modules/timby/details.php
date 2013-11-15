@@ -271,6 +271,24 @@ class Module_Timby extends Module {
             ),
         );
 
+        $tagged_reports = array(
+            'id' => array(
+                'type' => 'BIGINT',
+                'constraint' => '11',
+                'auto_increment' => TRUE
+            ),
+            'tag_type' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+            ),
+            'object_id' => array(
+                'type' => 'BIGINT',
+            ),
+            'report_id' => array(
+                'type' => 'BIGINT',
+            )
+        );
+
         // Create the upload paths
         is_dir($this->upload_path.'timby/images') OR @mkdir($this->upload_path.'timby/images',0777,TRUE);
         is_dir($this->upload_path.'timby/videos') OR @mkdir($this->upload_path.'timby/videos',0777,TRUE);
@@ -304,6 +322,10 @@ class Module_Timby extends Module {
         $this->dbforge->add_field($report_sectors);
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('report_sectors');
+
+        $this->dbforge->add_field($tagged_reports);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('tagged_reports');
 
         // Module settings
         $youtube_api_key = array(
@@ -396,6 +418,7 @@ class Module_Timby extends Module {
         $this->dbforge->drop_table('report_images');
         $this->dbforge->drop_table('report_categories');
         $this->dbforge->drop_table('report_sectors');
+        $this->dbforge->drop_table('tagged_reports');
 
         // Remove settings
         $this->db->delete('settings', array('module' => 'timby'));
