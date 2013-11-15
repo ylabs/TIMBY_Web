@@ -73,19 +73,24 @@ class Field_reporttag {
 
         $all_reports = null;
 
+        $limit = Settings::get('timby_num_reports_blog');
+
+        if(!$limit)
+            $limit = 50;
+
         if($min_id != null && $max_id != null)
         {
             $all_reports = $this->CI->reports_m
                 ->order_by('id', 'desc')
-                ->where('id >=', $min_id - 30)
-                ->where('id <=', $max_id + 30)
+                ->where('id >=', $min_id - (ceil($limit / 2) + 5))
+                ->where('id <=', $max_id + (ceil($limit / 2) + 5))
                 ->find_all();
         }
         else
         {
             $all_reports = $this->CI->reports_m
                 ->order_by('id', 'desc')
-                ->limit(50)
+                ->limit($limit)
                 ->find_all();
         }
 

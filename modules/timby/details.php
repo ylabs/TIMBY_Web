@@ -343,6 +343,76 @@ class Module_Timby extends Module {
 
         $this->db->insert('settings', $youtube_api_key);
 
+        // YouTube Secret
+
+        $youtube_secret = array(
+            'slug' => 'youtube_secret',
+            'title' => 'YouTube Secret Key',
+            'description' => 'Secret Key used to manage videos on YouTube',
+            '`default`' => 'YAPIKey',
+            '`value`' => 'YAPIKey',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $youtube_secret);
+
+        // YouTube Algorithm
+
+        $youtube_algorithm = array(
+            'slug' => 'youtube_algorithm',
+            'title' => 'YouTube Algorithm',
+            'description' => 'YouTube Algorithm',
+            '`default`' => 'Algorithm',
+            '`value`' => 'Algorithm',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $youtube_algorithm);
+
+        // YouTube Access Token
+
+        $youtube_access_token = array(
+            'slug' => 'youtube_access_token',
+            'title' => 'YouTube Access Token',
+            'description' => 'YouTube Access Token',
+            '`default`' => 'YAccessToken',
+            '`value`' => 'YAccessToken',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $youtube_access_token);
+
+        // YouTube Enabled
+
+        $youtube_enabled = array(
+            'slug' => 'youtube_enabled',
+            'title' => 'YouTube Enabled',
+            'description' => 'Is YouTube Enabled?',
+            '`default`' => 'false',
+            '`value`' => 'false',
+            'type' => 'radio',
+            '`options`' => 'true=Yes|false=No',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $youtube_enabled);
+
+        // CartoDB user name
+
         $cartodb_user_name = array(
             'slug' => 'cartodb_user_name',
             'title' => 'CartoDB User Name',
@@ -357,6 +427,8 @@ class Module_Timby extends Module {
         );
 
         $this->db->insert('settings', $cartodb_user_name);
+
+        // CartoDB api key
 
         $cartodb_api_key = array(
             'slug' => 'cartodb_api_key',
@@ -373,6 +445,93 @@ class Module_Timby extends Module {
 
         $this->db->insert('settings', $cartodb_api_key);
 
+        // Enable Vimeo?
+
+        $enable_vimeo = array(
+            'slug' => 'enable_vimeo',
+            'title' => 'Enable Vimeo',
+            'description' => 'Enable Vimeo API?',
+            '`default`' => 'false',
+            '`value`' => 'false',
+            'type' => 'radio',
+            '`options`' => 'true=Yes|false=No',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $enable_vimeo);
+
+        // Vimeo Consumer Key
+
+        $vimeo_consumer_key = array(
+            'slug' => 'vimeo_consumer_key',
+            'title' => 'Consumer Key',
+            'description' => 'Vimeo Consumer Key',
+            '`default`' => 'VCKey',
+            '`value`' => 'VCKey',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $vimeo_consumer_key);
+
+        // Vimeo Consumer Secret
+
+        $vimeo_consumer_secret = array(
+            'slug' => 'vimeo_consumer_secret',
+            'title' => 'Consumer Secret',
+            'description' => 'Vimeo Consumer Secret',
+            '`default`' => 'VCSecret',
+            '`value`' => 'VCSecret',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $vimeo_consumer_secret);
+
+        // Number of reports on display in the blog tagging
+
+        $timby_num_reports_blog = array(
+            'slug' => 'timby_num_reports_blog',
+            'title' => 'Number of reports to show in the blog section',
+            'description' => 'Number of reports to show in the blog section',
+            '`default`' => '50',
+            '`value`' => '50',
+            'type' => 'text',
+            '`options`' => '',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $timby_num_reports_blog);
+
+        // Enable decryption
+
+        $enable_decryption = array(
+            'slug' => 'timby_enable_decryption',
+            'title' => 'Enable Decryption',
+            'description' => 'Enable Decryption',
+            '`default`' => 'false',
+            '`value`' => 'false',
+            'type' => 'radio',
+            '`options`' => 'true=Yes|false=No',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $enable_decryption);
+
+        // Overall decryption key
+
         $decryption_key = array(
             'slug' => 'timby_decription_key',
             'title' => 'Decryption Key',
@@ -387,6 +546,8 @@ class Module_Timby extends Module {
         );
 
         $this->db->insert('settings', $decryption_key);
+
+        // Report soft delete?
 
         $report_soft_delete = array(
             'slug' => 'report_soft_delete',
