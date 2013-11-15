@@ -29,11 +29,6 @@ class Field_reporttag {
     {
         $this->init();
 
-        $all_reports = $this->CI->reports_m
-            ->order_by('id', 'desc')
-            ->limit(50)
-            ->find_all();
-
         $tagged_reports = false;
 
         if($entry_id != null)
@@ -45,13 +40,55 @@ class Field_reporttag {
 
         $tagged_reports_array = array();
 
+        $min_id = null;
+        $max_id = null;
+
         if($tagged_reports)
         {
             foreach($tagged_reports as $tagged_report)
             {
                 $tagged_reports_array[] = $tagged_report->report_id;
+
+                if($max_id == null)
+                {
+                    $min_id = $tagged_report->report_id;
+                }
+
+                if($max_id == null)
+                {
+                    $min_id = $tagged_report->report_id;
+                }
+
+                if($tagged_report->report_id < $min_id)
+                {
+                    $min_id = $tagged_report->report_id;
+                }
+
+                if($tagged_report->report_id > $max_id)
+                {
+                    $max_id = $tagged_report->report_id;
+                }
             }
         }
+
+        $all_reports = null;
+
+        if($min_id != null && $max_id != null)
+        {
+            $all_reports = $this->CI->reports_m
+                ->order_by('id', 'desc')
+                ->where('id >=', $min_id - 30)
+                ->where('id <=', $max_id + 30)
+                ->find_all();
+        }
+        else
+        {
+            $all_reports = $this->CI->reports_m
+                ->order_by('id', 'desc')
+                ->limit(50)
+                ->find_all();
+        }
+
 
         $view = $this->CI->type->load_view($this->field_type_slug, 'index', array(
             'all_reports' => $all_reports,
