@@ -1,0 +1,39 @@
+<script type="text/x-mustache-template" id="settings-template">
+    <div class="settings">
+        <button class="close">x</button>
+        <h3>Settings</h3>
+        <h4 class="title"> Basemap selection </h4>
+        <ul class="basemap-selector" >
+            <li class="basemap" id="toner">{{ theme:image file="basemap-stamen-toner.png" }}</li>
+            <li class="basemap" id="terrain">{{ theme:image file="basemap-nokia-terrain.png" }}</li>
+            <li class="basemap" id="forest">{{ theme:image file="basemap-thunderforest.png" }}</li>
+            <li class="basemap" id="normal">{{ theme:image file="basemap-nokia-normal.png" }}</li>
+        </ul>
+        <p class="attributions">
+            <i>Basemap Credits</i>
+        </p>
+    </div>
+</script>
+
+<script type="text/x-mustache-template" id="legend-template">
+    <div class="legend">
+        <ul class="legend-items">
+            {{#items}}
+                <li class="item" id="{{id}}"><div class="dot" style="background: {{color}};"></div>{{item}}</li>
+            {{/items}}
+        </ul>
+    </div>
+</script>
+
+<script type="text/x-mustache-template" id="gear-template">
+    <div class="gear">
+        {{ theme:image file="settings-gear.png" }}
+    </div>
+</script>
+
+<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+{{ theme:js file="app.js" }}
+
+<script type="text/javascript">
+    window.onload = App;
+</script>

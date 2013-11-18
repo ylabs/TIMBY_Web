@@ -17,14 +17,6 @@ class Theme_Timby extends Theme {
             'options'       => '',
             'is_required'   => true
         ),
-        'theme' => array(
-            'title' => 'CartoDB default theme',
-            'description'   => 'Should it be dark or light?',
-            'default'       => 'dark',
-            'type'          => 'radio',
-            'options'       => 'dark=Dark|light=Light',
-            'is_required'   => true
-        ),
     );
 }
 
