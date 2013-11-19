@@ -58,13 +58,16 @@ class Module_Timby extends Module {
                 'constraint' => '11',
                 'auto_increment' => TRUE
             ),
-            'title' => array(
+            'issue' => array(
                 'type' => 'VARCHAR',
-                'constraint' => '250'
+                'constraint' => '250',
+            ),
+            'description' => array(
+                'type' => 'TEXT',
             ),
             'slug' => array(
                 'type' => 'VARCHAR',
-                'constraint' => '250'
+                'constraint' => '250',
             ),
             'category' => array(
                 'type' => 'INT',

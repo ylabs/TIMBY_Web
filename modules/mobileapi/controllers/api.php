@@ -245,14 +245,15 @@ class API extends REST_Controller
         $user_id = $this->input->post('user_id');
         $key = $this->input->post('key');
 
-        $title = $this->input->post('title');
+        $issue = $this->input->post('issue');
+        $description = $this->input->post('description');
         $sector = $this->input->post('sector');
         $report_date = $this->input->post('report_date');
         $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
         $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
 
-        if($token != false && $user_id != false && $title != false && $report_date != false &&
-            $sector != false)
+        if($token != false && $user_id != false && $issue != false && $report_date != false &&
+            $sector != false && $description != false)
         {
             $post_vars = $this->input->post();
 
@@ -300,13 +301,14 @@ class API extends REST_Controller
         $key = $this->input->post('key');
 
         $report_id = $this->input->post('report_id');
-        $title = $this->input->post('title');
+        $issue = $this->input->post('issue');
+        $description = $this->input->post('description');
         $sector = $this->input->post('sector');
         $report_date = $this->input->post('report_date');
         $lat = $this->input->post('lat') != false ? $this->input->post('lat') : 0;
         $long = $this->input->post('long') != false ? $this->input->post('long') : 0;
 
-        if($token != false && $user_id != false && $title != false &&
+        if($token != false && $user_id != false && $issue != false && $description != false &&
             $report_id != false && $report_date != false && $sector != false)
         {
             $post_vars = $this->input->post();
