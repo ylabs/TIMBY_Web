@@ -109,4 +109,12 @@ class Admin extends Admin_Controller
                 ->build('admin/reports/edit');
         }
     }
+
+    public function extract_zips()
+    {
+        $this->load->library("file_upload");
+        $this->file_upload->get_all_files(array(
+            'user_id' => $this->current_user->id,
+        ));
+    }
 }

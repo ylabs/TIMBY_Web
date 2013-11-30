@@ -104,7 +104,7 @@ class API_Handlers
 
         // Upload configuration
         $config = array();
-        $config['allowed_types'] = 'gif|jpg|png';
+        $config['allowed_types'] = 'gif|jpg|png|mp3|mp4';
         $config['max_size']	= 0;
         $config['max_width']  = 0;
         $config['max_height']  = 0;
@@ -212,7 +212,7 @@ class API_Handlers
 
         // Upload configuration
         $config = array();
-        $config['allowed_types'] = 'gif|jpg|png';
+        $config['allowed_types'] = 'gif|jpg|png|mp3|mp4';
         $config['max_size']	= 0;
         $config['max_width']  = 0;
         $config['max_height']  = 0;
