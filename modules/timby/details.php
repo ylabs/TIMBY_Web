@@ -78,7 +78,7 @@ class Module_Timby extends Module {
                 'type' => 'INT',
                 'default' => 0,
             ),
-            'company' => array(
+            'entity' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '250',
                 'default' => '',

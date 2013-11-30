@@ -136,7 +136,7 @@ class File_upload {
                             $report_title = $report->report_title;
                             $category = $report->category;
                             $sector = $report->sector;
-                            $company = $report->company;
+                            $entity = $report->entity;
                             $location = $report->location;
                             $report_objects = $report->report_objects;
                             $report_date = $report->report_date;
@@ -157,7 +157,7 @@ class File_upload {
                                 'title' => $report_title,
                                 'category' => $category,
                                 'sector' => $sector,
-                                'company' => $company,
+                                'entity' => $entity,
                                 'user_id' => $user_id,
                                 'lat' => $lat,
                                 'long' => $long,
