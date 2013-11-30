@@ -20,6 +20,7 @@ class File_upload {
     /**
      * Find the extraction folder
      *
+     * @param array $parameters
      * @return string
      */
     private function find_extract_folder($parameters = array())
@@ -30,11 +31,24 @@ class File_upload {
     /**
      * Find the zip folder
      *
+     * @param array $parameters
      * @return string
      */
     private function find_zip_folder($parameters = array())
     {
         return dirname(__FILE__)."/../../../../../uploads/default/files";
+    }
+
+    /**
+     * Locates the upload folder
+     *
+     * @param array $parameters
+     * @return string
+     */
+
+    private function find_upload_folder($parameters = array())
+    {
+        return dirname(UPLOAD_PATH);
     }
 
     /**
@@ -95,6 +109,7 @@ class File_upload {
      * Process a folder with unzipped items
      *
      * @param $extraction_folder
+     * @param array $parameters
      */
     private function process_unzipped_files($extraction_folder, $parameters = array())
     {
@@ -149,12 +164,32 @@ class File_upload {
                                 'report_date' => $report_date,
                             );
 
-                            ci()->api_hanlers->create_report($report_api_array);
+                            $report_id = ci()->api_hanlers->create_report($report_api_array);
+
+                            $sequence = 0;
 
                             foreach($report_objects as $report_object)
                             {
                                 $item_title = trim($report_object->object_title);
                                 $item_type = trim($report_object->object_type);
+
+                                $api_media_type = "";
+
+                                switch($item_type)
+                                {
+                                    case "image/jpeg":
+                                        $api_media_type = "image";
+                                        break;
+                                    case "video/3gpp":
+                                        $api_media_type = "video";
+                                        break;
+                                    case "audio/mpeg3":
+                                        $api_media_type = "video";
+                                        break;
+                                    case "text/html":
+                                        $api_media_type = "narrative";
+                                        break;
+                                }
 
                                 switch($item_type)
                                 {
@@ -162,13 +197,41 @@ class File_upload {
                                     case "video/3gpp":
                                     case "audio/mpeg3":
                                         $item_media = $report_object->object_media;
+
+                                        $file_parameters = array(
+                                            "sequence" => $sequence,
+                                            "file_path" => $extraction_folder.$item_media,
+                                            "object_type" => $api_media_type,
+                                            "report_id" => $report_id,
+                                            "title" => $item_title,
+                                            "narrative" => "",
+                                        );
+
+                                        ci()->api_handlers->insert_report_object($this->find_upload_folder(), $file_parameters,
+                                            array(
+                                                "file_path" => $extraction_folder.$item_media
+                                            )
+                                        );
+
                                         break;
                                     case "text/html":
                                         $item_narrative = $report_object->object_text;
+
+                                        $narrative_parameters = array(
+                                            "sequence" => $sequence,
+                                            "file_path" => "",
+                                            "object_type" => $api_media_type,
+                                            "report_id" => $report_id,
+                                            "title" => $item_title,
+                                            "narrative" => $item_narrative,
+                                        );
+
+                                        ci()->api_handlers->insert_report_object($this->find_upload_folder(), $narrative_parameters);
+
                                         break;
                                 }
 
-                                // Handle the file upload
+                                $sequence ++;
                             }
                         }
                     }

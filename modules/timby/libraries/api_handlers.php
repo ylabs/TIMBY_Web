@@ -90,7 +90,7 @@ class API_Handlers
         return false;
     }
 
-    public function insert_report_object($upload_path, $post_data)
+    public function insert_report_object($upload_path, $post_data, $parameters = array())
     {
         // We may upload heavy objects
         set_time_limit(0);
@@ -113,6 +113,7 @@ class API_Handlers
         $object_type = $post_data["object_type"];
         $report_id = $post_data["report_id"];
         $narrative = $post_data["narrative"];
+        $title = $post_data["title"];
 
         $do_upload = true;
         $table_to_use = "";
@@ -151,18 +152,36 @@ class API_Handlers
 
         if($do_upload)
         {
-            ci()->load->library('upload', $config);
-
-            if (ci()->upload->do_upload())
+            if(!isset($parameters["file_path"]))
             {
-                $upload_data = ci()->upload->data();
+                ci()->load->library('upload', $config);
+
+                if (ci()->upload->do_upload())
+                {
+                    $upload_data = ci()->upload->data();
+                }
+                else
+                {
+                    return ci()->upload->display_errors();
+                }
+
+                Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
             }
             else
             {
-                return ci()->upload->display_errors();
-            }
+                if(!copy($parameters["file_path"], $upload_path."/".$parameters["file_name"]))
+                {
+                    return array("message" => "Copy not successful");
+                }
 
-            Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
+                $upload_data["file_name"] = $upload_path."/".$parameters["file_name"];
+            }
+        }
+
+        if(isset($upload_data["file_name"]))
+        {
+            rename($upload_path."/".$upload_data["file_name"], $upload_path."/".$report_id."_".$upload_data["file_name"]);
+            $upload_data["file_name"] = $report_id."_".$upload_data["file_name"];
         }
 
         $object_id = false;
@@ -173,6 +192,7 @@ class API_Handlers
                 array(
                     "{$path_field_to_use}" => $upload_data["file_name"],
                     "{$field_to_use}" => json_encode(array("original_file" => $upload_data["file_name"])),
+                    "title" => $title,
                     "report_id" => $report_id,
                 )
             );
@@ -182,6 +202,7 @@ class API_Handlers
             $object_id = ci()->reports_m->{$table_to_use}()->insert(
                 array(
                     "{$field_to_use}" => $narrative,
+                    "title" => $title,
                     "report_id" => $report_id,
                 )
             );
