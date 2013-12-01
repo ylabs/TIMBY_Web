@@ -41,7 +41,7 @@
                         break;
                     case 1:
                         // Image
-                        echo("<img src='".site_url(UPLOAD_PATH.'timby/images/'.$object->file)."'/>");
+                        echo("<img src='".site_url(UPLOAD_PATH.'timby/images/'.$object->file)."' style='width:100%;'/>");
                         break;
                     case 2:
                         // Video

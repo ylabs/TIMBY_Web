@@ -164,25 +164,29 @@ class API_Handlers
                 {
                     return ci()->upload->display_errors();
                 }
-
-                Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
             }
             else
             {
-                if(!copy($parameters["file_path"], $upload_path."/".$parameters["file_name"]))
+                if(!copy($parameters["file_path"], rtrim(realpath($config['upload_path']), "/")."/".$parameters["file_name"]))
                 {
                     return array("message" => "Copy not successful");
                 }
 
-                $upload_data["file_name"] = $upload_path."/".$parameters["file_name"];
+                $upload_data["file_name"] = rtrim(realpath($config['upload_path']), "/")."/".$parameters["file_name"];
             }
         }
 
         if(isset($upload_data["file_name"]))
         {
-            rename($upload_path."/".$upload_data["file_name"], $upload_path."/".$report_id."_".$upload_data["file_name"]);
-            $upload_data["file_name"] = $report_id."_".$upload_data["file_name"];
+            $path_info = pathinfo($upload_data["file_name"]);
+            $file_path = realpath($upload_data["file_name"]);
+
+            if(rename($file_path, $path_info['dirname']."/".$report_id."_".$path_info['basename']))
+                $upload_data["file_name"] = $report_id."_".$path_info['basename'];
         }
+
+        // Post file upload event trigger
+        Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
 
         $object_id = false;
 

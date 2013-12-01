@@ -116,5 +116,7 @@ class Admin extends Admin_Controller
         $this->file_upload->get_all_files(array(
             'user_id' => $this->current_user->id,
         ));
+
+        redirect('admin/timby');
     }
 }

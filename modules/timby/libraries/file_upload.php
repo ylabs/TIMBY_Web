@@ -14,7 +14,10 @@ class File_upload {
      */
     public function __construct()
     {
+        // For API operations
         ci()->load->library('timby/api_handlers');
+        // For file processing from the file manager
+        ci()->load->library('files/files');
     }
 
     /**
@@ -110,6 +113,7 @@ class File_upload {
      *
      * @param $extraction_folder
      * @param array $parameters
+     * @return bool
      */
     private function process_unzipped_files($extraction_folder, $parameters = array())
     {
@@ -164,11 +168,11 @@ class File_upload {
                                 'report_date' => $report_date,
                             );
 
-                            $report_id = ci()->api_hanlers->create_report($report_api_array);
+                            $report_id = ci()->api_handlers->create_report($report_api_array);
 
                             $sequence = 0;
 
-                            foreach($report_objects as $report_object)
+                            foreach($report_objects->object as $report_object)
                             {
                                 $item_title = trim($report_object->object_title);
                                 $item_type = trim($report_object->object_type);
@@ -197,19 +201,22 @@ class File_upload {
                                     case "video/3gpp":
                                     case "audio/mpeg3":
                                         $item_media = $report_object->object_media;
+                                        $file_info = pathinfo($item_media);
 
                                         $file_parameters = array(
                                             "sequence" => $sequence,
                                             "file_path" => $extraction_folder.$item_media,
                                             "object_type" => $api_media_type,
-                                            "report_id" => $report_id,
+                                            "report_id" => $report_id["id"],
                                             "title" => $item_title,
                                             "narrative" => "",
+                                            'user_id' => $user_id,
                                         );
 
                                         ci()->api_handlers->insert_report_object($this->find_upload_folder(), $file_parameters,
                                             array(
-                                                "file_path" => $extraction_folder.$item_media
+                                                "file_path" => $extraction_folder.'/'.$object.$item_media,
+                                                "file_name" => $file_info['basename'],
                                             )
                                         );
 
@@ -220,10 +227,12 @@ class File_upload {
                                         $narrative_parameters = array(
                                             "sequence" => $sequence,
                                             "file_path" => "",
+                                            "file_name" => "",
                                             "object_type" => $api_media_type,
-                                            "report_id" => $report_id,
+                                            "report_id" => $report_id["id"],
                                             "title" => $item_title,
                                             "narrative" => $item_narrative,
+                                            'user_id' => $user_id,
                                         );
 
                                         ci()->api_handlers->insert_report_object($this->find_upload_folder(), $narrative_parameters);
@@ -238,6 +247,16 @@ class File_upload {
                 }
             }
         }
+
+        return true;
+    }
+
+    private function delete_processed_files($zip_folder, $zip_files)
+    {
+        foreach($zip_files as $file)
+        {
+            ci()->files->delete_file($file->id);
+        }
     }
 
     /**
@@ -245,8 +264,6 @@ class File_upload {
      */
     public function get_all_files($parameters = array())
     {
-        ci()->load->library('files/files');
-
         $folder_found = false;
         $folder_id = 0;
 
@@ -294,6 +311,10 @@ class File_upload {
             }
         }
 
+        // Process
         $this->process_unzipped_files($extraction_folder, $parameters);
+
+        // Delete processed files
+        $this->delete_processed_files($zip_folder, $zip_files["data"]["file"]);
     }
 } 
