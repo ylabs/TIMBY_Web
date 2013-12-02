@@ -8,6 +8,7 @@ class API_Handlers
     const type_narrative = 0;
     const type_image = 1;
     const type_video = 2;
+    const type_entity = 3;
 
     public function __construct()
     {
@@ -112,8 +113,8 @@ class API_Handlers
         $sequence_number = $post_data["sequence"];
         $object_type = $post_data["object_type"];
         $report_id = $post_data["report_id"];
-        $narrative = $post_data["narrative"];
-        $title = $post_data["title"];
+        $narrative = isset($post_data["narrative"]) ? $post_data["narrative"] : "";
+        $title = isset($post_data["title"]) ? $post_data["title"] : "";
 
         $do_upload = true;
         $table_to_use = "";
@@ -142,6 +143,13 @@ class API_Handlers
                 $path_field_to_use = "image_path";
                 $field_to_use = "image";
                 $object_type = self::type_image;
+                break;
+            case "entity":
+                $do_upload = false;
+                $table_to_use = "entities";
+                $path_field_to_use = "";
+                $field_to_use = "entity";
+                $object_type = self::type_entity;
                 break;
             default:
                 return false;
@@ -183,10 +191,10 @@ class API_Handlers
 
             if(rename($file_path, $path_info['dirname']."/".$report_id."_".$path_info['basename']))
                 $upload_data["file_name"] = $report_id."_".$path_info['basename'];
-        }
 
-        // Post file upload event trigger
-        Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
+            // Post file upload event trigger
+            Events::trigger('media_uploaded', array("file_name" => $config['upload_path']."/".$upload_data["file_name"]));
+        }
 
         $object_id = false;
 
@@ -245,7 +253,9 @@ class API_Handlers
         $object_type = $post_data["object_type"];
         $report_id = $post_data["report_id"];
         $object_id = $post_data["object_id"];
-        $narrative = $post_data["narrative"];
+        $narrative = isset($post_data["narrative"]) ? $post_data["narrative"] : "";
+        $title = isset($post_data["title"]) ? $post_data["title"] : "";
+        $text_data = isset($post_data["text_data"]) ? $post_data["text_data"] : "";
 
         $old_object_id = $object_id;
 
@@ -276,6 +286,14 @@ class API_Handlers
                 $path_field_to_use = "image_path";
                 $field_to_use = "image";
                 $object_type = self::type_image;
+                break;
+            case "entity":
+                $do_upload = false;
+                $table_to_use = "entities";
+                $path_field_to_use = "";
+                $field_to_use = "entity";
+                $object_type = self::type_entity;
+                $title = $text_data;
                 break;
             default:
                 return false;
@@ -328,6 +346,7 @@ class API_Handlers
                 array(
                     "{$path_field_to_use}" => $upload_data["file_name"],
                     "{$field_to_use}" => json_encode(array("original_file" => $upload_data["file_name"])),
+                    "title" => $title,
                     "report_id" => $report_id,
                 )
             );
@@ -338,6 +357,7 @@ class API_Handlers
                 $old_object_id,
                 array(
                     "{$field_to_use}" => $narrative,
+                    "title" => $title,
                     "report_id" => $report_id,
                 )
             );
@@ -377,6 +397,9 @@ class API_Handlers
                 $table_to_use = "images";
                 $new_upload_path = $new_upload_path."images/";
                 $path_field_to_use = "image_path";
+                break;
+            case "entity":
+                $table_to_use = "entities";
                 break;
             default:
                 return false;

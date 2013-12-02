@@ -193,6 +193,9 @@ class File_upload {
                                     case "text/html":
                                         $api_media_type = "narrative";
                                         break;
+                                    case "timby/entity":
+                                        $api_media_type = "entity";
+                                        break;
                                 }
 
                                 switch($item_type)
@@ -222,6 +225,7 @@ class File_upload {
 
                                         break;
                                     case "text/html":
+                                    case "timby/entity":
                                         $item_narrative = $report_object->object_text;
 
                                         $narrative_parameters = array(

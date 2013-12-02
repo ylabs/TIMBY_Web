@@ -78,11 +78,6 @@ class Module_Timby extends Module {
                 'type' => 'INT',
                 'default' => 0,
             ),
-            'entity' => array(
-                'type' => 'VARCHAR',
-                'constraint' => '250',
-                'default' => '',
-            ),
             'user_id' => array(
                 'type' => 'INT',
             ),
@@ -243,6 +238,36 @@ class Module_Timby extends Module {
             ),
         );
 
+        $report_entities = array(
+            'id' => array(
+                'type' => 'BIGINT',
+                'constraint' => '11',
+                'auto_increment' => TRUE
+            ),
+            'entity' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250'
+            ),
+            'title' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250'
+            ),
+            'report_id' => array(
+                'type' => 'BIGINT',
+            ),
+            'deleted' => array(
+                'type' => 'INT',
+                'default' => 0,
+            ),
+            'created_on' => array(
+                'type' => 'datetime',
+            ),
+            'modified_on' => array(
+                'type' => 'datetime',
+                'null' => true,
+            ),
+        );
+
         $report_categories = array(
             'id' => array(
                 'type' => 'BIGINT',
@@ -318,6 +343,10 @@ class Module_Timby extends Module {
         $this->dbforge->add_field($report_narratives);
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('report_narratives');
+
+        $this->dbforge->add_field($report_entities);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('report_entities');
 
         $this->dbforge->add_field($report_categories);
         $this->dbforge->add_key('id', TRUE);
@@ -568,6 +597,23 @@ class Module_Timby extends Module {
 
         $this->db->insert('settings', $report_soft_delete);
 
+        // Make submitted reports public?
+
+        $submitted_reports_public = array(
+            'slug' => 'reports_are_public',
+            'title' => 'Make submitted reports public on approval?',
+            'description' => 'Allows the front end to view approved reports',
+            '`default`' => 'false',
+            '`value`' => 'false',
+            'type' => 'radio',
+            '`options`' => 'true=Yes|false=No',
+            'is_required' => 1,
+            'is_gui' => 1,
+            'module' => 'timby'
+        );
+
+        $this->db->insert('settings', $submitted_reports_public);
+
         // Return status
 
 		return true;
@@ -582,6 +628,7 @@ class Module_Timby extends Module {
         $this->dbforge->drop_table('report_videos');
         $this->dbforge->drop_table('report_images');
         $this->dbforge->drop_table('report_categories');
+        $this->dbforge->drop_table('report_entities');
         $this->dbforge->drop_table('report_sectors');
         $this->dbforge->drop_table('tagged_reports');
 

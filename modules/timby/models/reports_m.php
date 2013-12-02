@@ -21,6 +21,7 @@ class Reports_m extends BF_Model {
         $this->load->model('timby/report_narratives_m');
         $this->load->model('timby/report_videos_m');
         $this->load->model('timby/report_images_m');
+        $this->load->model('timby/report_entities_m');
 
         // Libraries
         $this->load->library("timby/timby_utilities");
@@ -158,5 +159,10 @@ class Reports_m extends BF_Model {
     public function videos()
     {
         return $this->report_videos_m;
+    }
+
+    public function entities()
+    {
+        return $this->report_entities_m;
     }
 }

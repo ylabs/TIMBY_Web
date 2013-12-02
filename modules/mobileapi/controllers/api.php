@@ -398,12 +398,10 @@ class API extends REST_Controller
         $sequence_number = $this->input->post("sequence");
         $object_type = $this->input->post("object_type");
         $report_id = $this->input->post("report_id");
-        $object_id = $this->input->post("object_id");
         $narrative = $this->input->post("narrative");
-        $report_date = $this->input->post('report_date');
 
         if($token != false && $user_id != false && $report_id != false && $sequence_number != false &&
-            $object_type != false && $object_id != false && $narrative != false && $report_date != false)
+            $object_type != false && $narrative != false)
         {
             $post_vars = $this->input->post();
             $post_vars['upload_path'] = dirname(UPLOAD_PATH);
