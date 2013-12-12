@@ -149,5 +149,15 @@ class Events_Timby {
             }
         }
     }
+
+    public function post_published($id)
+    {
+        // Push to cartodb
+    }
+
+    public function post_unpublished($id)
+    {
+        // Remove from cartodb
+    }
 }
 /* End of file events.php */
