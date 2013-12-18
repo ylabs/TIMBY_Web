@@ -26,6 +26,8 @@ class Events_Timby {
         Events::register('post_updated', array($this, 'post_updated'));
         Events::register('post_created', array($this, 'post_created'));
         Events::register('post_deleted', array($this, 'post_deleted'));
+        Events::register('post_published', array($this, 'post_published'));
+        Events::register('post_unpublished', array($this, 'post_unpublished'));
 
         // Media functions - useful for things like decryption
         Events::register('media_uploaded', array($this, 'media_uploaded'));
