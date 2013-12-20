@@ -44,6 +44,18 @@ class Admin extends Admin_Controller
     public function post($report_id)
     {
         // The report post
+        $report_post = $this->reports_m->posts()->find_by(array('report_id' => $report_id));
+        $post_text = "";
+
+        if($report_post)
+        {
+            $post_text = $report_post->post;
+        }
+
+        $this->template
+            ->title($this->module_details['name'])
+            ->set('post_text', $post_text)
+            ->build('admin/reports/post');
     }
 
     public function approve($report_id)

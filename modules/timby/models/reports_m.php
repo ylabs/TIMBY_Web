@@ -17,6 +17,7 @@ class Reports_m extends BF_Model {
 		parent::__construct();
 
         // Loading related models
+        $this->load->model('timby/report_posts_m');
         $this->load->model('timby/report_sequence_m');
         $this->load->model('timby/report_narratives_m');
         $this->load->model('timby/report_videos_m');
@@ -34,7 +35,16 @@ class Reports_m extends BF_Model {
             $data["slug"] = $this->timby_utilities->get_slug($data["title"]);
         }
 
-        return parent::insert($data);
+        $report_id =  parent::insert($data);
+
+        // Create a corresponding post object
+
+        $this->posts()->insert(array(
+            'report_id' => $report_id,
+            'post' => 'Report post',
+        ));
+
+        return $report_id;
     }
 
     public function update($where = NULL, $data = NULL)
@@ -52,14 +62,19 @@ class Reports_m extends BF_Model {
         $result = null;
 
         if($soft_delete)
+        {
             $result = parent::update($id, array("deleted" => 1));
+        }
         else
+        {
             $result = parent::delete($id);
+        }
 
         if(!$soft_delete)
         {
             if($result)
             {
+                $this->posts()->delete_where(array('report_id' => $id));
                 $this->sequence()->delete_where(array("report_id" => $id));
                 $this->sequence()->delete_where(array("report_id" => $id));
                 $this->narratives()->delete_where(array("report_id" => $id));
@@ -139,6 +154,11 @@ class Reports_m extends BF_Model {
         }
 
         return $report;
+    }
+
+    public function posts()
+    {
+        return $this->report_posts_m;
     }
 
     public function sequence()

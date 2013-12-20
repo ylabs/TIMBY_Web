@@ -158,72 +158,88 @@ class Events_Timby {
 
     public function report_approved($id)
     {
-        // report_approved event handler
+        if(Settings::get("reports_are_public") == "true")
+        {
+
+        }
     }
 
     public function report_disapproved($id)
     {
-        // report_disapproved event handler
+        if(Settings::get("reports_are_public") == "true")
+        {
+
+        }
     }
 
     public function post_published($id)
     {
-        // Push to cartodb
-        $account = Settings::get('cartodb_user_name');
-        $api_key = Settings::get('cartodb_api_key');
+        if(Settings::get("reports_are_public") == "false")
+        {
+            // Push to cartodb
+            $account = Settings::get('cartodb_user_name');
+            $api_key = Settings::get('cartodb_api_key');
 
-        ci()->load->model('blog/blog_m');
-        ci()->load->model('timby/reports_m');
-        $this->load_tags_models();
+            ci()->load->model('blog/blog_m');
+            ci()->load->model('timby/reports_m');
+            $this->load_tags_models();
 
-        $blog_entry = ci()->blog_m->get($id);
-        $tagged_reports = ci()->tagged_reports_m->find_by('object_id', $id);
+            $blog_entry = ci()->blog_m->get($id);
+            $tagged_reports = ci()->tagged_reports_m->find_by('object_id', $id);
 
-        if(!$tagged_reports || !$blog_entry)
-            return false;
+            if(!$tagged_reports || !$blog_entry)
+                return false;
 
-        $report = ci()->reports_m->find_by('id', $tagged_reports->report_id);
+            $report = ci()->reports_m->find_by('id', $tagged_reports->report_id);
 
-        if(!$report)
-            return false;
+            if(!$report)
+                return false;
 
-        $timestamp = strtotime($blog_entry->created);
+            $timestamp = strtotime($blog_entry->created);
 
-        $the_geom = '{"type":"Point","coordinates":['.$report->lat.','.$report->long.']}';
-        $category = $report->category;
-        $image_url = "";
-        $sector = $report->sector;
-        $item_date = $blog_entry->created;
-        $timby_id = $id;
-        $title = $blog_entry->title;
-        $url = site_url("blog/".date("Y/m", $timestamp)."/".$blog_entry->slug);
+            $the_geom = '{"type":"Point","coordinates":['.$report->lat.','.$report->long.']}';
+            $category = $report->category;
+            $image_url = "";
+            $sector = $report->sector;
+            $item_date = $blog_entry->created;
+            $timby_id = $id;
+            $title = $blog_entry->title;
+            $url = site_url("blog/".date("Y/m", $timestamp)."/".$blog_entry->slug);
 
-        $statement = "INSERT INTO dashboard(the_geom, category, image_url, item_date, sector, timby_id,
+            $statement = "INSERT INTO dashboard(the_geom, category, image_url, item_date, sector, timby_id,
             title, url) VALUES ('{$the_geom}', {$$category}, '{$image_url}', '{$item_date}',
             {$sector}, {$timby_id}, '{$title}', '{$url}')";
 
-        ci()->load->library('timby/cartodb');
-        $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
+            ci()->load->library('timby/cartodb');
+            $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
 
-        $result = json_decode($json_result);
+            $result = json_decode($json_result);
 
-        return $result;
+            return $result;
+        }
+
+        return false;
     }
 
     public function post_unpublished($id)
     {
-        // Remove from cartodb
-        $statement = "DELETE FROM dashboard WHERE id = {$id}";
+        if(Settings::get("reports_are_public") == "false")
+        {
+            // Remove from cartodb
+            $statement = "DELETE FROM dashboard WHERE id = {$id}";
 
-        $account = Settings::get('cartodb_user_name');
-        $api_key = Settings::get('cartodb_api_key');
+            $account = Settings::get('cartodb_user_name');
+            $api_key = Settings::get('cartodb_api_key');
 
-        ci()->load->library('timby/cartodb');
-        $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
+            ci()->load->library('timby/cartodb');
+            $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
 
-        $result = json_decode($json_result);
+            $result = json_decode($json_result);
 
-        return $result;
+            return $result;
+        }
+
+        return false;
     }
 }
 /* End of file events.php */
