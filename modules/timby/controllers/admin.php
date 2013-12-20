@@ -41,6 +41,11 @@ class Admin extends Admin_Controller
 			->build('admin/reports/index');
 	}
 
+    public function post($report_id)
+    {
+        // The report post
+    }
+
     public function approve($report_id)
     {
         $this->reports_m->update($report_id, array('approved' => 1));

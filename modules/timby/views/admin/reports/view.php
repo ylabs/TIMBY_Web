@@ -55,6 +55,8 @@
 
             ?>
             <div style="padding-bottom">
+                <a href="<?php echo site_url('admin/timby/post/'.$item->id) ?>" title="<?php echo lang('timby:report_post')?>" class="button"><?php echo lang('timby:report_post')?></a>
+
                 <?php if($item->approved == 0) : ?>
                     <a href="<?php echo site_url('admin/timby/approve/'.$item->id) ?>" title="<?php echo lang('timby:approve')?>" class="button"><?php echo lang('timby:approve')?></a>
                 <?php else : ?>

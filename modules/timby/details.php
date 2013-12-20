@@ -20,6 +20,13 @@ class Module_Timby extends Module {
 				'reports' => array(
 					'name' 	=> 'timby:reports', // These are translated from your language file
 					'uri' 	=> 'admin/timby',
+                    'shortcuts' => array(
+                        'create' => array(
+                            'name' 	=> 'timby:extract_zip',
+                            'uri' 	=> 'admin/timby/extract_zips',
+                            'class' => 'add'
+                        )
+                    )
 				),
                 'categories' => array(
                     'name' 	=> 'timby:categories', // These are translated from your language file
@@ -130,6 +137,27 @@ class Module_Timby extends Module {
             ),
             'sequence' => array(
                 'type' => 'INT',
+            ),
+            'created_on' => array(
+                'type' => 'datetime',
+            ),
+            'modified_on' => array(
+                'type' => 'datetime',
+                'null' => true,
+            ),
+        );
+
+        $report_posts = array(
+            'id' => array(
+                'type' => 'BIGINT',
+                'constraint' => '11',
+                'auto_increment' => TRUE
+            ),
+            'report_id' => array(
+                'type' => 'BIGINT',
+            ),
+            'post' => array(
+                'type' => 'TEXT',
             ),
             'created_on' => array(
                 'type' => 'datetime',
@@ -335,6 +363,10 @@ class Module_Timby extends Module {
         $this->dbforge->add_field($report_videos);
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('report_videos');
+
+        $this->dbforge->add_field($report_posts);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('report_posts');
 
         $this->dbforge->add_field($report_images);
         $this->dbforge->add_key('id', TRUE);
@@ -624,6 +656,7 @@ class Module_Timby extends Module {
         // Remove tables
         $this->dbforge->drop_table('reports');
         $this->dbforge->drop_table('report_sequence');
+        $this->dbforge->drop_table('report_posts');
         $this->dbforge->drop_table('report_narratives');
         $this->dbforge->drop_table('report_videos');
         $this->dbforge->drop_table('report_images');

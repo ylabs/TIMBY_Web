@@ -29,6 +29,10 @@ class Events_Timby {
         Events::register('post_published', array($this, 'post_published'));
         Events::register('post_unpublished', array($this, 'post_unpublished'));
 
+        // Report editing events
+        Events::register('report_approved', array($this, 'report_approved'));
+        Events::register('report_disapproved', array($this, 'report_disapproved'));
+
         // Media functions - useful for things like decryption
         Events::register('media_uploaded', array($this, 'media_uploaded'));
     }
@@ -150,6 +154,16 @@ class Events_Timby {
                 }
             }
         }
+    }
+
+    public function report_approved($id)
+    {
+        // report_approved event handler
+    }
+
+    public function report_disapproved($id)
+    {
+        // report_disapproved event handler
     }
 
     public function post_published($id)

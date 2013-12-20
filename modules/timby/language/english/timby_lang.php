@@ -8,6 +8,7 @@ $lang['timby:category'] = 'Category';
 $lang['timby:sectors'] = 'Sectors';
 $lang['timby:sector'] = 'Sector';
 $lang['timby:report'] = 'Report';
+$lang['timby:report_post'] = 'Report Post';
 
 // Category screens
 $lang['timby:create_category'] = 'Create Category';
@@ -29,6 +30,7 @@ $lang['timby:no_reports_uploaded'] = 'There are no reports uploaded';
 $lang['timby:approve'] = 'Approve';
 $lang['timby:disapprove'] = 'Disapprove';
 $lang['timby:download_video'] = 'Download Video';
+$lang['timby:extract_zip'] = 'Extract Zip Files';
 
 // Map
 $lang['timby:report_point'] = 'Report point';

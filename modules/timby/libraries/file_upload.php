@@ -78,6 +78,7 @@ class File_upload {
     /**
      * Clear extraction folder
      *
+     * @param array $parameters
      * @return bool
      */
     private function clear_extract_folder($parameters = array())
@@ -161,7 +162,6 @@ class File_upload {
                                 'title' => $report_title,
                                 'category' => $category,
                                 'sector' => $sector,
-                                'entity' => $entity,
                                 'user_id' => $user_id,
                                 'lat' => $lat,
                                 'long' => $long,
