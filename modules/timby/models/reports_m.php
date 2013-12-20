@@ -80,6 +80,7 @@ class Reports_m extends BF_Model {
                 $this->narratives()->delete_where(array("report_id" => $id));
                 $this->images()->delete_where(array("report_id" => $id));
                 $this->videos()->delete_where(array("report_id" => $id));
+                $this->entities()->delete_where(array("report_id" => $id));
             }
         }
 

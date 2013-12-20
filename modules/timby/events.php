@@ -160,7 +160,35 @@ class Events_Timby {
     {
         if(Settings::get("reports_are_public") == "true")
         {
+            // Push to cartodb
+            $account = Settings::get('cartodb_user_name');
+            $api_key = Settings::get('cartodb_api_key');
 
+            ci()->load->model('timby/reports_m');
+            $timby_report = ci()->reports_m->find_by('object_id', $id);
+
+            if(!$timby_report)
+                return false;
+
+            $the_geom = '{"type":"Point","coordinates":['.$timby_report->lat.','.$timby_report->long.']}';
+            $category = $timby_report->category;
+            $image_url = "";
+            $sector = $timby_report->sector;
+            $item_date = $timby_report->created_on;
+            $timby_id = $id;
+            $title = $timby_report->title;
+            $url = site_url("timby/view/".$id);
+
+            $statement = "INSERT INTO dashboard(the_geom, category, image_url, item_date, sector, timby_id,
+                title, url) VALUES ('{$the_geom}', {$$category}, '{$image_url}', '{$item_date}',
+                {$sector}, {$timby_id}, '{$title}', '{$url}')";
+
+            ci()->load->library('timby/cartodb');
+            $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
+
+            $result = json_decode($json_result);
+
+            return $result;
         }
     }
 
@@ -168,7 +196,18 @@ class Events_Timby {
     {
         if(Settings::get("reports_are_public") == "true")
         {
+            // Remove from cartodb
+            $statement = "DELETE FROM dashboard WHERE id = {$id}";
 
+            $account = Settings::get('cartodb_user_name');
+            $api_key = Settings::get('cartodb_api_key');
+
+            ci()->load->library('timby/cartodb');
+            $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
+
+            $result = json_decode($json_result);
+
+            return $result;
         }
     }
 
@@ -207,8 +246,8 @@ class Events_Timby {
             $url = site_url("blog/".date("Y/m", $timestamp)."/".$blog_entry->slug);
 
             $statement = "INSERT INTO dashboard(the_geom, category, image_url, item_date, sector, timby_id,
-            title, url) VALUES ('{$the_geom}', {$$category}, '{$image_url}', '{$item_date}',
-            {$sector}, {$timby_id}, '{$title}', '{$url}')";
+                title, url) VALUES ('{$the_geom}', {$$category}, '{$image_url}', '{$item_date}',
+                {$sector}, {$timby_id}, '{$title}', '{$url}')";
 
             ci()->load->library('timby/cartodb');
             $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);

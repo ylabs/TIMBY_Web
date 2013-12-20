@@ -14,5 +14,11 @@ class Timby extends Public_Controller
 	 */
 	public function index($offset = 0)
 	{
+        // Landing
 	}
+
+    public function view($report_id = 0)
+    {
+        // View a whole report if necessary (the narrative on a committed page)
+    }
 }

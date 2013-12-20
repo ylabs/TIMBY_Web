@@ -43,6 +43,26 @@ class Admin extends Admin_Controller
 
     public function post($report_id)
     {
+        // Has submit been done?
+
+        $post_vars = $this->input->post();
+
+        if($post_vars)
+        {
+            if(isset($post_vars['post']))
+            {
+                $post = $post_vars['post'];
+
+                $result = $this->reports_m->posts()->update(array('report_id' => $report_id),
+                    array('post' => $post));
+
+                if($result)
+                {
+                    redirect('admin/timby/');
+                }
+            }
+        }
+
         // The report post
         $report_post = $this->reports_m->posts()->find_by(array('report_id' => $report_id));
         $post_text = "";
@@ -53,7 +73,9 @@ class Admin extends Admin_Controller
         }
 
         $this->template
+            ->append_metadata($this->load->view('fragments/wysiwyg', array(), true))
             ->title($this->module_details['name'])
+            ->set('report_id', $report_id)
             ->set('post_text', $post_text)
             ->build('admin/reports/post');
     }

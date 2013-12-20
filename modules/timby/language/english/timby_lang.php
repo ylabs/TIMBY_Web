@@ -13,6 +13,7 @@ $lang['timby:report_post'] = 'Report Post';
 // Category screens
 $lang['timby:create_category'] = 'Create Category';
 $lang['timby:edit_category'] = 'Edit Category';
+$lang['timby:edit_report_post'] = 'Edit Report Post';
 
 // Report screens
 $lang['timby:view_report'] = 'View Report';
