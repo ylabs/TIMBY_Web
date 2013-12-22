@@ -11,7 +11,6 @@ var App = function(){
 		
 		Timby.Index = Backbone.View.extend({
 			initialize : function(){
-				this.mapLayerUrl = 'http://timby.cartodb.com/api/v2/viz/db2f6d30-443d-11e3-bbef-5fc57e5d5ce4/viz.json';
 				this.reportLayerUrl = 'http://timby.cartodb.com/api/v2/viz/db2f6d30-443d-11e3-bbef-5fc57e5d5ce4/viz.json';
 				this.setupBaseMap();
 				this.setupCartoDBLayer();
@@ -27,15 +26,18 @@ var App = function(){
 
 				// Create the legend that states the marker colors
 				var legend = new Timby.LegendView(
-									this.map, 
-									'bottomleft', 
-									{items: [
-										{item: 'palm oil', id: 'palm', color: 'green'}, 
-										{item: 'hunting', id: 'hunting', color: 'blue'}, 
-										{item: 'logging', id: 'logging', color: 'yellow'}, 
-										{item: 'mining', id: 'mining', color: 'red'}
-									]}
-							 ); // color can take rgb, rgba, hex, or text
+                    this.map,
+                    'bottomleft',
+                    {
+                        items:
+                        [
+                            {item: 'palm oil', id: 'palm', color: 'green'},
+                            {item: 'hunting', id: 'hunting', color: 'blue'},
+                            {item: 'logging', id: 'logging', color: 'yellow'},
+                            {item: 'mining', id: 'mining', color: 'red'}
+                        ]
+                    }
+                ); // color can take rgb, rgba, hex, or text
 				return this;
 			},
 
@@ -52,91 +54,46 @@ var App = function(){
 			},
 
 			setupCartoDBLayer : function () {
-				var self = this;
 
+                var self = this;
 
 				cartodb.createLayer(this.map, this.reportLayerUrl)
-					.addTo(this.map)
-					.done(function(reports){
-						//turn off our local datapoints later
-						reports.hide();
-						// tell the layer what columns we want from click events
-						reports.getSubLayer(0).set({interactivity: 'url, media'})
+                    .addTo(this.map)
+                    .done(function(reports){
+                        reports.setInteraction(true);
 
-						//register a click event
-			          	reports.on('featureClick', function(e, pos, latlng, data) {
-			          		//updated the displayed image
-			          		if (data.media == 'image'){	
-				            	$('.media #image-view').html('<img src="'+data.url+'" />');
-				            } else if (data.media == 'video'){
-				            	$('.media #image-view').html("<video width='470' height='360' controls><source src='./"+data.url+"' type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'></video>");
-				            }
-			            });
-						self.reports = reports;
-					});
+                        // tell the layer what columns we want from click events
+                        reports.getSubLayer(0).set({interactivity: 'url, title'})
 
+                        // register a click event
+                        reports.on('featureClick', function(e, pos, latlng, data) {
 
-				cartodb.createLayer(this.map, this.mapLayerUrl)
-					.addTo(this.map)
-					.done(function(layer){
+                            // Toggle controls
 
-						// layer.getSubLayer(1).hide();
+                            $('.gear').hide();
+                            $('.sidepanel').show('slow');
 
-						//getSubLayer(0) contains our global view of 'reports'
-						//getSubLayer(1) contains clusters of individual reports
+                            $.get(data.url, function(data) {
+                                $('.sidepanel').html(data);
 
-						// on click of 0 you would grab an ID and filter layer 1 based on that ID, then show it on the map while hiding 0. we fake it all below :)
+                                $('.sidepanel .close').click(function(){
+                                    $('.sidepanel').hide('slow');
+                                    $('.gear').show();
+                                    self.reports.setInteraction(false);
+                                    self.reports.hide();
 
-						//SETUP listener for legend/filter clicks
-						// probably could be done better a backbone way, but this is rough
-						$('.legend li').click(function(d){
-							if ($(this).hasClass('active')) {
-								// Filter is being turned off
-								// Remove css highlight and reset SQL
-								$('.legend li').removeClass('active');
-								layer.getSubLayer(0).setSQL("SELECT * FROM timby_demo")
-							} else {
-								$('.legend li').removeClass('active')
-								// A filter is active. set some css and apply a
-								// sql filter to our layer
-								$(this).addClass('active');
-								layer.getSubLayer(0).setSQL("SELECT * FROM timby_demo WHERE type='"+$(this).attr('id')+"'");
-							}
-							
-						})
-			          layer.setInteraction(true);
-					  // tell the layer what columns we want from click events
-					  layer.getSubLayer(0).set({interactivity: 'title, date, companies, people, tags, description'})
+                                    reports.setInteraction(true);
+                                    reports.show();
+                                });
+                            });
 
-			          $('.sidepanel .close').click(function(){
-			          	$('.sidepanel').hide('slow'); 
-			          	$('.gear').show();
-			            self.reports.setInteraction(false);
-			            self.reports.hide();
+                            reports.setInteraction(false);
+                            reports.hide();
+                        });
 
-			          	layer.setInteraction(true);
-			            layer.show();
-
-			          })
-
-			          layer.on('featureClick', function(e, pos, latlng, data) {
-			          	//this is one way you could dynamically update content in the sidepanel
-			          	$('.sidepanel .title').text(data.title)
-
-			            $('.gear').hide();
-			            $('.sidepanel').show('slow');
-			          	layer.setInteraction(false);
-			            layer.hide();
-			            self.reports.setInteraction(true);
-			            self.reports.show();
-
-			            // zoom to our sublayer;
-			            var sql = new cartodb.SQL({ user: 'andrew' });
-						sql.getBounds('SELECT * FROM timby_local').done(function(bounds) {
-						   self.map.fitBounds(bounds);
-						});
-			          });
-					});
+                        self.reports = reports;
+                    }
+                );
 			}
 		
 		});
@@ -148,6 +105,7 @@ var App = function(){
 		
 			initialize : function(map, position, collection) {
 				this.map = map;
+                this.position = position;
 				this.collection = collection;
 				var template = this.template;
 				this.controller = L.Control.extend({
