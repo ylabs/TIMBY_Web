@@ -53,7 +53,7 @@ class Timby extends Public_Controller
             }
 
             $this->load->view('timby/timby/view', array('report' => $report, 'entities' => $entites,
-                'category' => $category, "report_post" => $report_post));
+                'category' => $category, "report_post" => $this->parser->parse_string($report_post, array(), true)));
         }
         else
         {
