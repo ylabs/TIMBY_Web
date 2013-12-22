@@ -73,7 +73,18 @@ var App = function(){
                             $('.gear').hide();
                             $('.sidepanel').show('slow');
 
-                            $.get(data.url, function(data) {
+                            var url = data.url;
+
+                            if (window.location.protocol != "https:")
+                            {
+                                url = url.replace("https:", "http:");
+                            }
+                            else
+                            {
+                                url = url.replace("http:", "https:");
+                            }
+
+                            $.get(url, function(data) {
                                 $('.sidepanel').html(data);
 
                                 $('.sidepanel .close').click(function(){
