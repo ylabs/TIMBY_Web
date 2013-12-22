@@ -156,58 +156,92 @@ class Events_Timby {
         }
     }
 
+    private function push_report_to_cartodb($id)
+    {
+        $account = Settings::get('cartodb_user_name');
+        $api_key = Settings::get('cartodb_api_key');
+
+        ci()->load->model('timby/reports_m');
+        $timby_report = ci()->reports_m->find_by('id', $id);
+
+        if(!$timby_report)
+            return false;
+
+        $the_geom = 'ST_SetSRID(ST_Point('.$timby_report->long.', '.$timby_report->lat.'), 4326)';
+        $category = $timby_report->category;
+        $image_url = "";
+        $sector = $timby_report->sector;
+        $item_date = $timby_report->created_on;
+        $timby_id = $id;
+        $title = $timby_report->title;
+        $url = site_url("timby/view/".$id);
+
+        $statement = "INSERT INTO dashboard(the_geom, category, image_url, item_date, sector, timby_id,
+                title, url) VALUES ({$the_geom}, {$category}, '{$image_url}', '{$item_date}',
+                {$sector}, {$timby_id}, '{$title}', '{$url}')";
+
+        ci()->load->library('timby/cartodb');
+        $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
+
+        $result = json_decode($json_result);
+
+        return $result;
+    }
+
+    private function remove_report_from_cartodb($id)
+    {
+        // Remove from cartodb
+        $statement = "DELETE FROM dashboard WHERE timby_id = {$id}";
+
+        $account = Settings::get('cartodb_user_name');
+        $api_key = Settings::get('cartodb_api_key');
+
+        ci()->load->library('timby/cartodb');
+        $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
+
+        $result = json_decode($json_result);
+
+        return $result;
+    }
+
     public function report_approved($id)
     {
         if(Settings::get("reports_are_public") == "true")
         {
-            // Push to cartodb
-            $account = Settings::get('cartodb_user_name');
-            $api_key = Settings::get('cartodb_api_key');
+            $results = array();
 
-            ci()->load->model('timby/reports_m');
-            $timby_report = ci()->reports_m->find_by('object_id', $id);
+            if(is_array($id))
+            {
+                foreach($id as $single_id)
+                {
+                    $results[] = $this->push_report_to_cartodb($single_id);
+                }
+            }
 
-            if(!$timby_report)
-                return false;
-
-            $the_geom = '{"type":"Point","coordinates":['.$timby_report->lat.','.$timby_report->long.']}';
-            $category = $timby_report->category;
-            $image_url = "";
-            $sector = $timby_report->sector;
-            $item_date = $timby_report->created_on;
-            $timby_id = $id;
-            $title = $timby_report->title;
-            $url = site_url("timby/view/".$id);
-
-            $statement = "INSERT INTO dashboard(the_geom, category, image_url, item_date, sector, timby_id,
-                title, url) VALUES ('{$the_geom}', {$$category}, '{$image_url}', '{$item_date}',
-                {$sector}, {$timby_id}, '{$title}', '{$url}')";
-
-            ci()->load->library('timby/cartodb');
-            $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
-
-            $result = json_decode($json_result);
-
-            return $result;
+            else
+            {
+                $results[] = $this->push_report_to_cartodb($id);
+            }
         }
+
+        return $results;
     }
 
     public function report_disapproved($id)
     {
         if(Settings::get("reports_are_public") == "true")
         {
-            // Remove from cartodb
-            $statement = "DELETE FROM dashboard WHERE id = {$id}";
-
-            $account = Settings::get('cartodb_user_name');
-            $api_key = Settings::get('cartodb_api_key');
-
-            ci()->load->library('timby/cartodb');
-            $json_result = ci()->cartodb->call_sql_api($account, $api_key, $statement);
-
-            $result = json_decode($json_result);
-
-            return $result;
+            if(is_array($id))
+            {
+                foreach($id as $single_id)
+                {
+                    $this->remove_report_from_cartodb($single_id);
+                }
+            }
+            else
+            {
+                $this->remove_report_from_cartodb($id);
+            }
         }
     }
 
@@ -236,7 +270,7 @@ class Events_Timby {
 
             $timestamp = strtotime($blog_entry->created);
 
-            $the_geom = '{"type":"Point","coordinates":['.$report->lat.','.$report->long.']}';
+            $the_geom = 'ST_SetSRID(ST_Point('.$report->long.', '.$report->lat.'),4326)';
             $category = $report->category;
             $image_url = "";
             $sector = $report->sector;
@@ -246,7 +280,7 @@ class Events_Timby {
             $url = site_url("blog/".date("Y/m", $timestamp)."/".$blog_entry->slug);
 
             $statement = "INSERT INTO dashboard(the_geom, category, image_url, item_date, sector, timby_id,
-                title, url) VALUES ('{$the_geom}', {$$category}, '{$image_url}', '{$item_date}',
+                title, url) VALUES ({$the_geom}, {$category}, '{$image_url}', '{$item_date}',
                 {$sector}, {$timby_id}, '{$title}', '{$url}')";
 
             ci()->load->library('timby/cartodb');
@@ -265,7 +299,7 @@ class Events_Timby {
         if(Settings::get("reports_are_public") == "false")
         {
             // Remove from cartodb
-            $statement = "DELETE FROM dashboard WHERE id = {$id}";
+            $statement = "DELETE FROM dashboard WHERE timby_id = {$id}";
 
             $account = Settings::get('cartodb_user_name');
             $api_key = Settings::get('cartodb_api_key');

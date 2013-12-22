@@ -15,7 +15,7 @@ class cartodb {
     {
         $cartodb_url = "http://{account}.cartodb.com/api/v2/sql?q={statement}&api_key={api_key}";
         $cartodb_url = str_replace("{account}", $account, $cartodb_url);
-        $cartodb_url = str_replace("{statement}", $statement, $cartodb_url);
+        $cartodb_url = str_replace("{statement}", urlencode($statement.";"), $cartodb_url);
         $cartodb_url = str_replace("{api_key}", $api_key, $cartodb_url);
 
         return $cartodb_url;
