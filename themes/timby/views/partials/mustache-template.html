@@ -20,7 +20,7 @@
         <div class="legend">
             <ul class="legend-items">
                 {{#items}}
-                    <li class="item" id="{{id}}"><div class="dot" style="background: {{color}};"></div>{{item}}</li>
+                    <li class="item" id="{{id}}" onclick="window.Timby.filterBySector({{id}});"><div class="dot" style="background: {{color}};"></div>{{item}}</li>
                 {{/items}}
             </ul>
         </div>

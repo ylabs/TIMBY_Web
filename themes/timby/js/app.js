@@ -4,6 +4,9 @@ var App = function(){
 
 		var Timby = {};
 		window.Timby = Timby;
+        var reports_layer = null;
+        var base_map = null;
+        var num_layers = 0;
 
 		var template = function(name) {
 			return Mustache.compile($('#'+name+'-template').html());
@@ -43,6 +46,7 @@ var App = function(){
 					subdomains: '1234'
 				});
 				this.baselayer.addTo(this.map);
+                base_map = this.map;
 			},
 
 			setupCartoDBLayer : function () {
@@ -95,11 +99,89 @@ var App = function(){
                         });
 
                         self.reports = reports;
+                        reports_layer = reports;
+                        num_layers = 1;
                     }
                 );
 			}
-		
 		});
+
+        Timby.filterBySector = function(sector_id) {
+            this.reportLayerUrl = 'http://timby.cartodb.com/api/v2/viz/17cd0c28-6bcd-11e3-b468-455646add620/viz.json';
+
+            if(reports_layer != null)
+            {
+                reports_layer.getSubLayer(num_layers - 1).remove();
+            }
+
+            cartodb.createLayer(base_map, this.reportLayerUrl)
+                .addTo(base_map)
+                .done(function(reports){
+                    reports.createSubLayer(
+                        {
+                            sql: "SELECT * FROM dashboard WHERE sector = " + sector_id,
+                            cartocss: "#dashboard{" +
+                                "marker-width: 12;" +
+                                "marker-fill: #FF6600;" +
+                                "marker-opacity: 0.9;" +
+                                "marker-allow-overlap: true;" +
+                                "marker-placement: point;" +
+                                "marker-type: ellipse;" +
+                                "marker-line-width: 2;" +
+                                "marker-line-color: #FFF;" +
+                                "marker-line-opacity: 1;" +
+                            "}"
+                        }
+                    );
+
+                    reports.getSubLayer(1).setInteraction(true);
+                    reports.getSubLayer(1).set({interactivity: 'url, title'})
+                    reports.setInteraction(true);
+
+                    // register a click event
+                    reports.on('featureClick', function(e, pos, latlng, data) {
+
+                        // Toggle controls
+
+                        $('.gear').hide();
+                        $('.sidepanel').show('slow');
+
+                        var url = data.url;
+
+                        if (window.location.protocol != "https:")
+                        {
+                            url = url.replace("https:", "http:");
+                        }
+                        else
+                        {
+                            url = url.replace("http:", "https:");
+                        }
+
+                        $.get(url, function(data) {
+                            $('.sidepanel').html(data);
+
+                            $('.sidepanel .close').click(function(){
+                                $('.sidepanel').hide('slow');
+                                $('.gear').show();
+                                self.reports.setInteraction(false);
+                                self.reports.hide();
+
+                                reports.setInteraction(true);
+                                reports.show();
+                            });
+                        });
+
+                        reports.setInteraction(false);
+                        reports.hide();
+                    });
+
+                    self.reports = reports;
+                    reports_layer = reports;
+
+                    num_layers = 2;
+                }
+            );
+        }
 
 		Timby.LegendView = Backbone.View.extend({
 			template : template('legend'),
