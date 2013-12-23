@@ -14,3 +14,18 @@
         </section>
     <?php echo form_close(); ?>
 </div>
+
+<script type="text/javascript">
+    tinymce.init(
+        {
+            selector:'textarea',
+            plugins: [
+                "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                "save table contextmenu directionality emoticons template paste textcolor"
+            ],
+            relative_urls: false,
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons"
+        }
+    );
+</script>

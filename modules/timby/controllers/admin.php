@@ -73,7 +73,7 @@ class Admin extends Admin_Controller
         }
 
         $this->template
-            ->append_metadata($this->load->view('fragments/wysiwyg', array(), true))
+            ->append_js('module::tinymce/tinymce.min.js')
             ->title($this->module_details['name'])
             ->set('report_id', $report_id)
             ->set('post_text', $post_text)
