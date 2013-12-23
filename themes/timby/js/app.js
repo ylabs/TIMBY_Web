@@ -28,15 +28,7 @@ var App = function(){
 				var legend = new Timby.LegendView(
                     this.map,
                     'bottomleft',
-                    {
-                        items:
-                        [
-                            {item: 'palm oil', id: 'palm', color: 'green'},
-                            {item: 'hunting', id: 'hunting', color: 'blue'},
-                            {item: 'logging', id: 'logging', color: 'yellow'},
-                            {item: 'mining', id: 'mining', color: 'red'}
-                        ]
-                    }
+                    sectors
                 ); // color can take rgb, rgba, hex, or text
 				return this;
 			},
