@@ -15,15 +15,17 @@
     </div>
 </script>
 
-<script type="text/x-mustache-template" id="legend-template">
-    <div class="legend">
-        <ul class="legend-items">
-            {{#items}}
-                <li class="item" id="{{id}}"><div class="dot" style="background: {{color}};"></div>{{item}}</li>
-            {{/items}}
-        </ul>
-    </div>
-</script>
+{{ noparse }}
+    <script type="text/x-mustache-template" id="legend-template">
+        <div class="legend">
+            <ul class="legend-items">
+                {{#items}}
+                    <li class="item" id="{{id}}"><div class="dot" style="background: {{color}};"></div>{{item}}</li>
+                {{/items}}
+            </ul>
+        </div>
+    </script>
+{{ /noparse }}
 
 <script type="text/x-mustache-template" id="gear-template">
     <div class="gear">

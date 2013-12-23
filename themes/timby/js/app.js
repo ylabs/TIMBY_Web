@@ -228,7 +228,6 @@ var App = function(){
 			index : function(){
 				var indexView = new Timby.Index();			
 				this.el.empty();
-				// this.el.append(indexView.render().el);
 			}
 		});
 	
