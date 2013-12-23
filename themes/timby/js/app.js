@@ -123,7 +123,7 @@ var App = function(){
 
                 if(sector_id > 0)
                 {
-                    sql_statement += "WHERE sector = " + sector_id;
+                    sql_statement += " WHERE sector = " + sector_id;
                 }
 
                 reports.createSubLayer(
