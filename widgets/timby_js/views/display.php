@@ -9,6 +9,11 @@
                     color: 'green'
                 },
 <?php endforeach; ?>
+                {
+                    item: 'all',
+                    id: 0,
+                    color: 'red'
+                }
             ]
     }
 </script>
