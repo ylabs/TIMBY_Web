@@ -432,7 +432,8 @@ abstract class FeedWriter
 			$thisItems = $item->getElements();
 			
 			//the argument is printed as rdf:about attribute of item in rss 1.0
-			echo $this->startItem($thisItems['link']['content']);
+			echo(isset($thisItems['link']['content']) ?
+                $this->startItem($thisItems['link']['content']) :  "");
 			
 			foreach ($thisItems as $feedItem)
 			{
