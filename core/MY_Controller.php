@@ -33,11 +33,33 @@ class MY_Controller extends MX_Controller
 	 */
 	public $method;
 
-	/**
+    private function str_left($s1, $s2)
+    {
+        return substr($s1, 0, strpos($s1, $s2));
+    }
+
+    private function self_url()
+    {
+        $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
+        $protocol = $this->str_left(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
+        $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+        return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
+    }
+
+    /**
 	 * Load and set data for some common used libraries.
 	 */
 	public function __construct()
 	{
+        // Make sure its not on a www. sub-domain (Javascript compatibility issues)
+        $current_url = $this->self_url();
+
+        if(strpos($current_url, "//www."))
+        {
+            $new_url = str_replace("//www.", "//", $current_url);
+            redirect($new_url);
+        }
+
 		parent::__construct();
 
 		$this->benchmark->mark('my_controller_start');
