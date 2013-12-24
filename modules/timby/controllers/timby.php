@@ -60,4 +60,47 @@ class Timby extends Public_Controller
             show_404();
         }
     }
+
+    public function rss()
+    {
+        if(Settings::get('reports_are_public') == "true")
+        {
+            require dirname(__FILE__).'/../libraries/feedwriter/FeedTypes.php';
+
+            $approved_reports = $this->reports_m
+                ->order_by('id', 'desc')
+                ->limit(100)
+                ->find_all_by(array('approved' => 1));
+
+            $reports_feed = new RSS2FeedWriter();
+
+            $reports_feed->setTitle('TIMBY RSS Feed');
+            $reports_feed->setLink(site_url('timby/timby/rss'));
+            $reports_feed->setDescription('RSS Feeds from the TIMBY website');
+            $reports_feed->setChannelElement('language', 'en-us');
+            $reports_feed->setChannelElement('pubDate', date(DATE_RSS, time()));
+
+            if($approved_reports)
+            {
+                foreach($approved_reports as $approved_report)
+                {
+                    $post = $this->reports_m->posts()->find_by('report_id', $approved_report->id);
+                    $feed_item = $reports_feed->createNewItem();
+
+                    $feed_item->setTitle($approved_report->title);
+                    $feed_item->setDate(strtotime($approved_report->report_date));
+                    $feed_item->setDescription($post ? $post->post : '');
+                    $feed_item->addElement('author', 'TIMBY');
+                    
+                    $reports_feed->addItem($feed_item);
+                }
+            }
+
+            $reports_feed->generateFeed();
+        }
+        else
+        {
+            show_404();
+        }
+    }
 }
