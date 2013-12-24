@@ -6,7 +6,9 @@ var App = function(){
     var reports_layer = null;
     var base_map = null;
     var num_layers = 0;
-    var current_sector = 0;
+
+    Timby.current_sector = 0;
+    Timby.current_timeline_value = 1;
 
     var template = function(name) {
         return Mustache.compile($('#'+name+'-template').html());
@@ -101,7 +103,7 @@ var App = function(){
                     self.reports = reports;
                     reports_layer = reports;
                     num_layers = 1;
-                    current_sector = 0;
+                    Timby.current_sector = 0;
                 }
             );
         }
@@ -109,6 +111,17 @@ var App = function(){
 
     Timby.filterBySector = function(sector_id) {
         this.reportLayerUrl = 'http://timby.cartodb.com/api/v2/viz/17cd0c28-6bcd-11e3-b468-455646add620/viz.json';
+        filterFromDate = new Date(min_timeline_year, min_timeline_month, min_timeline_day);
+        currentFilterFromDate = new Date();
+        currentFilterToDate = new Date();
+
+        currentFilterFromDate.setDate(filterFromDate.getDate() + (timeline_step_interval * Timby.current_timeline_value));
+        currentFilterToDate.setDate(currentFilterFromDate.getDate() + timeline_step_interval);
+
+        dateFromString = currentFilterFromDate.getFullYear() + "-" + (currentFilterFromDate.getMonth() + 1) + "-" +
+            currentFilterFromDate.getDate() + " 00:00:00";
+        dateToString = currentFilterToDate.getFullYear() + "-" + (currentFilterToDate.getMonth() + 1) + "-" +
+            currentFilterToDate.getDate() + " 23:59:59";
 
         if(reports_layer != null)
         {
@@ -124,6 +137,11 @@ var App = function(){
                 if(sector_id > 0)
                 {
                     sql_statement += " WHERE sector = " + sector_id;
+                    sql_statement += " AND item_date BETWEEN '" + dateFromString + "' AND '" + dateToString + "'";
+                }
+                else
+                {
+                    sql_statement += " WHERE item_date BETWEEN '" + dateFromString + "' AND '" + dateToString + "'";
                 }
 
                 reports.createSubLayer(
@@ -188,7 +206,7 @@ var App = function(){
                 reports_layer = reports;
 
                 num_layers = 2;
-                current_sector = sector_id;
+                Timby.current_sector = sector_id;
             }
         );
     }

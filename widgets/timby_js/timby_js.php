@@ -2,7 +2,7 @@
 
 class Widget_timby_js extends Widgets {
     public $title = 'TIMBY JavaScript Initialization Widget';
-    public $description =  'Initializes all variabled needed by the TIMBY theme.';
+    public $description =  'Initializes all variables needed by the TIMBY theme.';
     public $author = 'Team TIMBY';
     public $website = 'http://timby.com/';
     public $version = '1.0';
