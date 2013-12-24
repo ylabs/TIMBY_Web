@@ -433,7 +433,7 @@ abstract class FeedWriter
 			
 			//the argument is printed as rdf:about attribute of item in rss 1.0
 			echo(isset($thisItems['link']['content']) ?
-                $this->startItem($thisItems['link']['content']) :  "");
+                $this->startItem($thisItems['link']['content']) :  $this->startItem(site_url()));
 			
 			foreach ($thisItems as $feedItem)
 			{
