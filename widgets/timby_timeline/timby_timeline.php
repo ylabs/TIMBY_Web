@@ -47,7 +47,10 @@ class Widget_timby_timeline extends Widgets {
         if($number_of_ticks > $total_number_of_days)
             $number_of_ticks = $total_number_of_days;
 
-        $step_interval = ceil($total_number_of_days / $number_of_ticks);
+        if($number_of_ticks > 0)
+            $step_interval = ceil($total_number_of_days / $number_of_ticks);
+        else
+            $step_interval = 0;
 
         return array (
             'number_of_ticks' => $number_of_ticks,
