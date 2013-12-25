@@ -100,7 +100,8 @@ class Admin extends Admin_Controller
 
         // Trigger event so that it will be handled
         Events::trigger('report_disapproved', array('report_id' => $report_id,
-            'user_id' => $this->current_user->id), 'array');
+            'user_id' => $this->current_user->id,
+            'user_name' => $this->current_user->username), 'array');
         redirect(site_url("admin/timby"));
     }
 
