@@ -31,7 +31,7 @@
                         <td><?php echo($item->id); ?></td>
                         <td><?php echo($item->activity_id); ?></td>
                         <td><?php echo($item->description); ?></td>
-                        <td><?php echo(date("dS F Y", strtotime($item->created_on))); ?></td>
+                        <td><?php echo(date("dS F Y H:i:s", strtotime($item->created_on))); ?></td>
                         <td class="actions"><?php echo lang('timbysecurity:no_actions'); ?></td>
                     </tr>
                     <?php endforeach; ?>
