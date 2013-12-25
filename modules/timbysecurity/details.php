@@ -17,7 +17,7 @@ class Module_TimbySecurity extends Module {
 			'backend' => TRUE,
 			'menu' => 'content',
 			'sections' => array(
-				'items' => array(
+				'dashboard' => array(
 					'name' 	=> 'timbysecurity:dashboard',
 					'uri' 	=> 'admin/timbysecurity',
 				)
