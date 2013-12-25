@@ -16,6 +16,9 @@ class Admin extends Admin_Controller
 
 		// Load all the required models
 		$this->load->model('timbysecurity/security_log_m');
+
+        // Language
+        $this->lang->load('timbysecurity');
 	}
 
 	/**
@@ -39,4 +42,10 @@ class Admin extends Admin_Controller
             ->set('pagination', $pagination)
 			->build('admin/index');
 	}
+
+    public function bulkactions()
+    {
+        // Nothing at the moment
+        redirect('timbysecurity/index');
+    }
 }
