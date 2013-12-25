@@ -41,7 +41,11 @@ class Admin_Categories extends Admin_Controller
 
         if($post_vars)
         {
-            $this->categories_m->insert($post_vars);
+            $category_id = $this->categories_m->insert($post_vars);
+
+            Events::trigger('report_category_created', array('category_id' => $category_id,
+                'user_id' => $this->current_user->id), 'array');
+
             redirect(site_url("admin/timby/categories"));
         }
         else
@@ -66,6 +70,10 @@ class Admin_Categories extends Admin_Controller
         if($post_vars)
         {
             $this->categories_m->update($category_id, $post_vars);
+
+            Events::trigger('report_category_edited', array('category_id' => $category_id,
+                'user_id' => $this->current_user->id), 'array');
+
             redirect(site_url("admin/timby/categories"));
         }
         else
@@ -83,6 +91,10 @@ class Admin_Categories extends Admin_Controller
     public function delete($category_id = 0)
     {
         $this->categories_m->delete($category_id);
+
+        Events::trigger('report_category_deleted', array('category_id' => $category_id,
+            'user_id' => $this->current_user->id), 'array');
+
         redirect(site_url("admin/timby/categories"));
     }
 }

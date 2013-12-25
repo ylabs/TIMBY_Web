@@ -58,6 +58,9 @@ class Admin extends Admin_Controller
 
                 if($result)
                 {
+                    Events::trigger('report_post_changed', array('report_id' => $report_id,
+                        'user_id' => $this->current_user->id,
+                        'user_name' => $this->current_user->username), 'array');
                     redirect('admin/timby/');
                 }
             }
@@ -85,7 +88,9 @@ class Admin extends Admin_Controller
         $this->reports_m->update($report_id, array('approved' => 1));
 
         // Trigger event so that it will be handled
-        Events::trigger('report_approved', array('report_id' => $report_id), 'array');
+        Events::trigger('report_approved', array('report_id' => $report_id,
+            'user_id' => $this->current_user->id,
+            'user_name' => $this->current_user->username), 'array');
         redirect(site_url("admin/timby"));
     }
 
@@ -94,7 +99,8 @@ class Admin extends Admin_Controller
         $this->reports_m->update($report_id, array('approved' => 0));
 
         // Trigger event so that it will be handled
-        Events::trigger('report_disapproved', array('report_id' => $report_id), 'array');
+        Events::trigger('report_disapproved', array('report_id' => $report_id,
+            'user_id' => $this->current_user->id), 'array');
         redirect(site_url("admin/timby"));
     }
 
@@ -103,7 +109,9 @@ class Admin extends Admin_Controller
         $this->reports_m->delete($report_id);
 
         // Trigger event so that it will be handled
-        Events::trigger('report_deleted', array('report_id' => $report_id), 'array');
+        Events::trigger('report_deleted', array('report_id' => $report_id,
+            'user_id' => $this->current_user->id,
+            'user_name' => $this->current_user->username), 'array');
         redirect(site_url("admin/timby"));
     }
 
@@ -132,7 +140,9 @@ class Admin extends Admin_Controller
             $this->reports_m->update($report_id, $post_vars);
 
             // Trigger event so that it will be handled
-            Events::trigger('report_edited', array('report_id' => $report_id), 'array');
+            Events::trigger('report_edited', array('report_id' => $report_id,
+                'user_id' => $this->current_user->id,
+                'user_name' => $this->current_user->username), 'array');
             redirect(site_url("admin/timby"));
         }
         else
@@ -155,6 +165,9 @@ class Admin extends Admin_Controller
         $this->file_upload->get_all_files(array(
             'user_id' => $this->current_user->id,
         ));
+
+        Events::trigger('zip_files_extracted', array('user_id' => $this->current_user->id,
+            'user_name' => $this->current_user->username), 'array');
 
         redirect('admin/timby');
     }

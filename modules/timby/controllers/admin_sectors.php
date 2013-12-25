@@ -41,7 +41,11 @@ class Admin_Sectors extends Admin_Controller
 
         if($post_vars)
         {
-            $this->sectors_m->insert($post_vars);
+            $sector_id = $this->sectors_m->insert($post_vars);
+
+            Events::trigger('report_sector_created', array('sector_id' => $sector_id,
+                'user_id' => $this->current_user->id), 'array');
+
             redirect(site_url("admin/timby/sectors"));
         }
         else
@@ -66,6 +70,10 @@ class Admin_Sectors extends Admin_Controller
         if($post_vars)
         {
             $this->sectors_m->update($category_id, $post_vars);
+
+            Events::trigger('report_sector_edited', array('sector_id' => $category_id,
+                'user_id' => $this->current_user->id), 'array');
+
             redirect(site_url("admin/timby/sectors"));
         }
         else
@@ -83,6 +91,10 @@ class Admin_Sectors extends Admin_Controller
     public function delete($category_id = 0)
     {
         $this->sectors_m->delete($category_id);
+
+        Events::trigger('report_sector_deleted', array('sector_id' => $category_id,
+            'user_id' => $this->current_user->id), 'array');
+
         redirect(site_url("admin/timby/sectors"));
     }
 }

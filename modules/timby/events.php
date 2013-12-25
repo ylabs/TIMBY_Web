@@ -212,10 +212,7 @@ class Events_Timby {
 
             if(is_array($id))
             {
-                foreach($id as $single_id)
-                {
-                    $results[] = $this->push_report_to_cartodb($single_id);
-                }
+                $results = $this->push_report_to_cartodb($id["report_id"]);
             }
 
             else
@@ -233,10 +230,7 @@ class Events_Timby {
         {
             if(is_array($id))
             {
-                foreach($id as $single_id)
-                {
-                    $this->remove_report_from_cartodb($single_id);
-                }
+                $this->remove_report_from_cartodb($id["report_id"]);
             }
             else
             {
