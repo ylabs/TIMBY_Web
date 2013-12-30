@@ -232,7 +232,7 @@ class Module_Timby extends Module {
             ),
         );
 
-        $report_videos = array(
+        $report_multimedia = array(
             'id' => array(
                 'type' => 'BIGINT',
                 'constraint' => '11',
@@ -246,11 +246,11 @@ class Module_Timby extends Module {
                 'type' => 'BIGINT',
                 'constraint' => '11',
             ),
-            'video_path' => array(
+            'multimedia_path' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '250',
             ),
-            'video' => array(
+            'multimedia' => array(
                 'type' => 'TEXT',
             ),
             'deleted' => array(
@@ -348,7 +348,7 @@ class Module_Timby extends Module {
 
         // Create the upload paths
         is_dir($this->upload_path.'timby/images') OR @mkdir($this->upload_path.'timby/images',0777,TRUE);
-        is_dir($this->upload_path.'timby/videos') OR @mkdir($this->upload_path.'timby/videos',0777,TRUE);
+        is_dir($this->upload_path.'timby/multimedia') OR @mkdir($this->upload_path.'timby/multimedia',0777,TRUE);
 
         // Create the tables
 
@@ -360,9 +360,9 @@ class Module_Timby extends Module {
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('report_sequence');
 
-        $this->dbforge->add_field($report_videos);
+        $this->dbforge->add_field($report_multimedia);
         $this->dbforge->add_key('id', TRUE);
-        $this->dbforge->create_table('report_videos');
+        $this->dbforge->create_table('report_multimedia');
 
         $this->dbforge->add_field($report_posts);
         $this->dbforge->add_key('id', TRUE);
@@ -658,7 +658,7 @@ class Module_Timby extends Module {
         $this->dbforge->drop_table('report_sequence');
         $this->dbforge->drop_table('report_posts');
         $this->dbforge->drop_table('report_narratives');
-        $this->dbforge->drop_table('report_videos');
+        $this->dbforge->drop_table('report_multimedia');
         $this->dbforge->drop_table('report_images');
         $this->dbforge->drop_table('report_categories');
         $this->dbforge->drop_table('report_entities');

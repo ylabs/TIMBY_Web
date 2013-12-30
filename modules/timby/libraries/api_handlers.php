@@ -7,7 +7,7 @@ class API_Handlers
 
     const type_narrative = 0;
     const type_image = 1;
-    const type_video = 2;
+    const type_multimedia = 2;
     const type_entity = 3;
 
     public function __construct()
@@ -130,12 +130,12 @@ class API_Handlers
                 $field_to_use = "narrative";
                 $object_type = self::type_narrative;
                 break;
-            case "video":
-                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/videos";
-                $table_to_use = "videos";
-                $path_field_to_use = "video_path";
-                $field_to_use = "video";
-                $object_type = self::type_video;
+            case "multimedia":
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
+                $table_to_use = "multimedia";
+                $path_field_to_use = "multimedia_path";
+                $field_to_use = "multimedia";
+                $object_type = self::type_multimedia;
                 break;
             case "image":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/images";
@@ -273,12 +273,12 @@ class API_Handlers
                 $field_to_use = "narrative";
                 $object_type = self::type_narrative;
                 break;
-            case "video":
-                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/videos";
-                $table_to_use = "videos";
-                $path_field_to_use = "video_path";
-                $field_to_use = "video";
-                $object_type = self::type_video;
+            case "multimedia":
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
+                $table_to_use = "multimedia";
+                $path_field_to_use = "multimedia_path";
+                $field_to_use = "multimedia";
+                $object_type = self::type_multimedia;
                 break;
             case "image":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/images";
@@ -388,10 +388,10 @@ class API_Handlers
             case "narrative":
                 $table_to_use = "narratives";
                 break;
-            case "video":
-                $table_to_use = "videos";
-                $new_upload_path = $new_upload_path."videos/";
-                $path_field_to_use = "video_path";
+            case "multimedia":
+                $table_to_use = "multimedia";
+                $new_upload_path = $new_upload_path."multimedia/";
+                $path_field_to_use = "multimedia_path";
                 break;
             case "image":
                 $table_to_use = "images";
