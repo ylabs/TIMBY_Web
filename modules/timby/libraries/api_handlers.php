@@ -130,7 +130,14 @@ class API_Handlers
                 $field_to_use = "narrative";
                 $object_type = self::type_narrative;
                 break;
-            case "multimedia":
+            case "audio":
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
+                $table_to_use = "multimedia";
+                $path_field_to_use = "multimedia_path";
+                $field_to_use = "multimedia";
+                $object_type = self::type_multimedia;
+                break;
+            case "video":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
                 $table_to_use = "multimedia";
                 $path_field_to_use = "multimedia_path";
@@ -273,7 +280,14 @@ class API_Handlers
                 $field_to_use = "narrative";
                 $object_type = self::type_narrative;
                 break;
-            case "multimedia":
+            case "audio":
+                $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
+                $table_to_use = "multimedia";
+                $path_field_to_use = "multimedia_path";
+                $field_to_use = "multimedia";
+                $object_type = self::type_multimedia;
+                break;
+            case "video":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
                 $table_to_use = "multimedia";
                 $path_field_to_use = "multimedia_path";
@@ -388,7 +402,12 @@ class API_Handlers
             case "narrative":
                 $table_to_use = "narratives";
                 break;
-            case "multimedia":
+            case "audio":
+                $table_to_use = "multimedia";
+                $new_upload_path = $new_upload_path."multimedia/";
+                $path_field_to_use = "multimedia_path";
+                break;
+            case "video":
                 $table_to_use = "multimedia";
                 $new_upload_path = $new_upload_path."multimedia/";
                 $path_field_to_use = "multimedia_path";
