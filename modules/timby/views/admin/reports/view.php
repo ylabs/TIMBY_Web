@@ -45,7 +45,11 @@
                         break;
                     case 2:
                         // Video
-                        echo anchor(site_url(UPLOAD_PATH.'timby/videos/'.$object->file), lang('timby:download_video'), "target='_blank'");
+                        echo anchor(site_url(UPLOAD_PATH.'timby/multimedia/'.$object->file), lang('timby:download_video'), "target='_blank'");
+                        break;
+                    case 3:
+                        // Audio
+                        echo anchor(site_url(UPLOAD_PATH.'timby/multimedia/'.$object->file), lang('timby:download_audio'), "target='_blank'");
                         break;
                 }
 

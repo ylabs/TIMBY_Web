@@ -31,6 +31,7 @@ $lang['timby:no_reports_uploaded'] = 'There are no reports uploaded';
 $lang['timby:approve'] = 'Approve';
 $lang['timby:disapprove'] = 'Disapprove';
 $lang['timby:download_video'] = 'Download Video';
+$lang['timby:download_audio'] = 'Download Audio';
 $lang['timby:extract_zip'] = 'Extract Zip Files';
 
 // Map

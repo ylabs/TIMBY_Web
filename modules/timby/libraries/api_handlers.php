@@ -7,8 +7,9 @@ class API_Handlers
 
     const type_narrative = 0;
     const type_image = 1;
-    const type_multimedia = 2;
-    const type_entity = 3;
+    const type_video = 2;
+    const type_audio = 3;
+    const type_entity = 4;
 
     public function __construct()
     {
@@ -120,6 +121,7 @@ class API_Handlers
         $table_to_use = "";
         $path_field_to_use = "";
         $field_to_use = "";
+        $type_field = null;
 
         switch($object_type)
         {
@@ -135,14 +137,16 @@ class API_Handlers
                 $table_to_use = "multimedia";
                 $path_field_to_use = "multimedia_path";
                 $field_to_use = "multimedia";
-                $object_type = self::type_multimedia;
+                $object_type = self::type_audio;
+                $type_field = $object_type;
                 break;
             case "video":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
                 $table_to_use = "multimedia";
                 $path_field_to_use = "multimedia_path";
                 $field_to_use = "multimedia";
-                $object_type = self::type_multimedia;
+                $object_type = self::type_video;
+                $type_field = $object_type;
                 break;
             case "image":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/images";
@@ -207,24 +211,30 @@ class API_Handlers
 
         if($path_field_to_use != "")
         {
-            $object_id = ci()->reports_m->{$table_to_use}()->insert(
-                array(
-                    "{$path_field_to_use}" => $upload_data["file_name"],
-                    "{$field_to_use}" => json_encode(array("original_file" => $upload_data["file_name"])),
-                    "title" => $title,
-                    "report_id" => $report_id,
-                )
+            $fields = array(
+                "{$path_field_to_use}" => $upload_data["file_name"],
+                "{$field_to_use}" => json_encode(array("original_file" => $upload_data["file_name"])),
+                "title" => $title,
+                "report_id" => $report_id,
             );
+
+            if($type_field != null)
+                $fields["type"] = $type_field;
+
+            $object_id = ci()->reports_m->{$table_to_use}()->insert($fields);
         }
         else
         {
-            $object_id = ci()->reports_m->{$table_to_use}()->insert(
-                array(
-                    "{$field_to_use}" => $narrative,
-                    "title" => $title,
-                    "report_id" => $report_id,
-                )
+            $fields = array(
+                "{$field_to_use}" => $narrative,
+                "title" => $title,
+                "report_id" => $report_id,
             );
+
+            if($type_field != null)
+                $fields["type"] = $type_field;
+
+            $object_id = ci()->reports_m->{$table_to_use}()->insert($fields);
         }
 
         if(!$object_id)
@@ -285,14 +295,14 @@ class API_Handlers
                 $table_to_use = "multimedia";
                 $path_field_to_use = "multimedia_path";
                 $field_to_use = "multimedia";
-                $object_type = self::type_multimedia;
+                $object_type = self::type_audio;
                 break;
             case "video":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/multimedia";
                 $table_to_use = "multimedia";
                 $path_field_to_use = "multimedia_path";
                 $field_to_use = "multimedia";
-                $object_type = self::type_multimedia;
+                $object_type = self::type_video;
                 break;
             case "image":
                 $config['upload_path'] = rtrim($upload_path, "/")."/default/timby/images";

@@ -188,7 +188,7 @@ class File_upload {
                                         $api_media_type = "video";
                                         break;
                                     case "audio/mpeg3":
-                                        $api_media_type = "video";
+                                        $api_media_type = "audio";
                                         break;
                                     case "text/html":
                                         $api_media_type = "narrative";

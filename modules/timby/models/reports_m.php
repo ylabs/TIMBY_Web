@@ -11,6 +11,8 @@ class Reports_m extends BF_Model {
     const type_narrative = 0;
     const type_image = 1;
     const type_video = 2;
+    const type_audio = 3;
+    const type_entity = 4;
 
 	public function __construct()
 	{		
@@ -20,7 +22,7 @@ class Reports_m extends BF_Model {
         $this->load->model('timby/report_posts_m');
         $this->load->model('timby/report_sequence_m');
         $this->load->model('timby/report_narratives_m');
-        $this->load->model('timby/report_videos_m');
+        $this->load->model('timby/report_multimedia_m');
         $this->load->model('timby/report_images_m');
         $this->load->model('timby/report_entities_m');
 
@@ -79,7 +81,7 @@ class Reports_m extends BF_Model {
                 $this->sequence()->delete_where(array("report_id" => $id));
                 $this->narratives()->delete_where(array("report_id" => $id));
                 $this->images()->delete_where(array("report_id" => $id));
-                $this->videos()->delete_where(array("report_id" => $id));
+                $this->multimedia()->delete_where(array("report_id" => $id));
                 $this->entities()->delete_where(array("report_id" => $id));
             }
         }
@@ -120,16 +122,17 @@ class Reports_m extends BF_Model {
                             }
 
                             break;
+                        case self::type_audio:
                         case self::type_video:
-                            $video = $this->videos()->find($item->item_id);
+                            $multimedia = $this->multimedia()->find($item->item_id);
 
-                            if($video)
+                            if($multimedia)
                             {
-                                if($video->deleted == 0)
+                                if($multimedia->deleted == 0)
                                 {
                                     $report->objects[$item_index] = new stdClass;
                                     $report->objects[$item_index]->type = $item->item_type;
-                                    $report->objects[$item_index]->file = $video->video_path;
+                                    $report->objects[$item_index]->file = $multimedia->multimedia_path;
                                 }
                             }
 
@@ -177,9 +180,9 @@ class Reports_m extends BF_Model {
         return $this->report_images_m;
     }
 
-    public function videos()
+    public function multimedia()
     {
-        return $this->report_videos_m;
+        return $this->report_multimedia_m;
     }
 
     public function entities()

@@ -253,6 +253,11 @@ class Module_Timby extends Module {
             'multimedia' => array(
                 'type' => 'TEXT',
             ),
+            'type' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+                'default' => 'video',
+            ),
             'deleted' => array(
                 'type' => 'INT',
                 'default' => 0,
