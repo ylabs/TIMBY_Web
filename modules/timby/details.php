@@ -49,6 +49,17 @@ class Module_Timby extends Module {
                             'class' => 'add'
                         )
                     )
+                ),
+                'entities' => array(
+                    'name' 	=> 'timby:entities', // These are translated from your language file
+                    'uri' 	=> 'admin/timby/entities',
+                    'shortcuts' => array(
+                        'create' => array(
+                            'name' 	=> 'timby:create',
+                            'uri' 	=> 'admin/timby/entities/create',
+                            'class' => 'add'
+                        )
+                    )
                 )
             )
 		);
@@ -333,6 +344,22 @@ class Module_Timby extends Module {
             ),
         );
 
+        $report_entity = array(
+            'id' => array(
+                'type' => 'BIGINT',
+                'constraint' => '11',
+                'auto_increment' => TRUE
+            ),
+            'entity' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250',
+            ),
+            'slug' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '250',
+            ),
+        );
+
         $tagged_reports = array(
             'id' => array(
                 'type' => 'BIGINT',
@@ -392,6 +419,10 @@ class Module_Timby extends Module {
         $this->dbforge->add_field($report_sectors);
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->create_table('report_sectors');
+
+        $this->dbforge->add_field($report_entity);
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('report_entity');
 
         $this->dbforge->add_field($tagged_reports);
         $this->dbforge->add_key('id', TRUE);
@@ -668,6 +699,7 @@ class Module_Timby extends Module {
         $this->dbforge->drop_table('report_categories');
         $this->dbforge->drop_table('report_entities');
         $this->dbforge->drop_table('report_sectors');
+        $this->dbforge->drop_table('report_entity');
         $this->dbforge->drop_table('tagged_reports');
 
         // Remove settings

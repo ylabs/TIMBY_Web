@@ -48,6 +48,12 @@ class Events_Timby {
         // Manage this event
         return ci()->api_handlers->get_sectors();
     }
+
+    public function get_entities()
+    {
+        // Manage this event
+        return ci()->api_handlers->get_entities();
+    }
     
     public function create_report($post_vars)
     {

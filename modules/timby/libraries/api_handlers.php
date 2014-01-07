@@ -16,6 +16,7 @@ class API_Handlers
         // Models
         ci()->load->model('timby/categories_m');
         ci()->load->model('timby/sectors_m');
+        ci()->load->model('timby/entities_m');
         ci()->load->model('timby/reports_m');
     }
 
@@ -34,6 +35,11 @@ class API_Handlers
     public function get_sectors()
     {
         return ci()->sectors_m->find_all();
+    }
+
+    public function get_entities()
+    {
+        return ci()->entities_m->find_all();
     }
 
     public function create_report($post_data)

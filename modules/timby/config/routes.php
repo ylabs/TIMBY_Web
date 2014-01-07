@@ -24,3 +24,4 @@
 $route['timby(/:num)?']			= 'timby/index$1';
 $route['timby/admin/categories(/:any)?'] = 'admin_categories$1';
 $route['timby/admin/sectors(/:any)?'] = 'admin_sectors$1';
+$route['timby/admin/entities(/:any)?'] = 'admin_entities$1';

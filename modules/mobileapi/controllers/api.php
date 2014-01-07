@@ -236,6 +236,41 @@ class API extends REST_Controller
     }
 
     /**
+     * Get entity list
+     */
+
+    public function getentities_post()
+    {
+        $token = $this->input->post('token');
+        $user_id = $this->input->post('user_id');
+        $key = $this->input->post('key');
+
+        if($token != false && $user_id != false)
+        {
+            $system_token = $this->user_tokens_model->get_token($user_id, $this->mobileapi_utils->get_client_ip());
+
+            if($system_token != false)
+            {
+                if($this->validate_key($user_id, $key))
+                    $this->response(Events::trigger('get_entities', null, 'array'));
+                else
+                    $this->response($this->error(self::msg_token_invalid_key_id, self::msg_token_invalid_key_text));
+                exit;
+            }
+            else
+            {
+                $this->response($this->error(self::msg_token_invalid_id, self::msg_token_invalid_text));
+                exit;
+            }
+        }
+        else
+        {
+            $this->response($this->error(self::msg_missing_parameters_id, self::msg_missing_parameters_text));
+            exit;
+        }
+    }
+
+    /**
      * Create a new report
      */
 
