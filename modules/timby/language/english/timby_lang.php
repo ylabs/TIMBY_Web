@@ -18,8 +18,8 @@ $lang['timby:edit_category'] = 'Edit Category';
 $lang['timby:edit_report_post'] = 'Edit Report Post';
 
 // Entity screens
-$lang['timby:create_entity'] = 'Create Category';
-$lang['timby:edit_entity'] = 'Edit Category';
+$lang['timby:create_entity'] = 'Create Entity';
+$lang['timby:edit_entity'] = 'Edit Entity';
 
 // Report screens
 $lang['timby:view_report'] = 'View Report';
