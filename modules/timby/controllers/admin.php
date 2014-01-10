@@ -23,7 +23,10 @@ class Admin extends Admin_Controller
 	 */
 	public function index()
 	{
-        $total_rows = $this->reports_m->count_all();
+        $total_rows = $this->reports_m
+            ->where('deleted', 0)
+            ->count_all();
+
         $pagination = create_pagination('admin/timby/index', $total_rows);
 
 		// here we use MY_Model's get_all() method to fetch everything
