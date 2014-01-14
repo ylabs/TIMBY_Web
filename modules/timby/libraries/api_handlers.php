@@ -189,6 +189,8 @@ class API_Handlers
                 {
                     return ci()->upload->display_errors();
                 }
+
+                $upload_data["file_name"] = rtrim(realpath($config['upload_path']), "/")."/".$upload_data["file_name"];
             }
             else
             {
