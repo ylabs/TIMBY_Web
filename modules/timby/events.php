@@ -18,6 +18,7 @@ class Events_Timby {
         // Report data events
         Events::register('get_categories', array($this, 'get_categories'));
         Events::register('get_sectors', array($this, 'get_sectors'));
+        Events::register('get_entities', array($this, 'get_entities'));
         Events::register('insert_object', array($this, 'insert_object'));
         Events::register('update_object', array($this, 'update_object'));
         Events::register('delete_object', array($this, 'delete_object'));
